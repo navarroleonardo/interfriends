@@ -1,18 +1,11 @@
 # InterFriends 📑
 
-
-
 <p align="center">
 <img alt="JAVA" src="https://img.shields.io/badge/-Java-007396?style=flat-square&logo=java"/>
 <img alt="SPRINGBOOT" src="https://img.shields.io/badge/-Spring-6DB33F?style=flat-square&logo=spring&logoColor=white"/>
 <img alt="MYSQL" src="https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white"/>
 
-
-
 ## Sobre o Projeto📖
-
-
-
 
 ## Ferramentas 🛠
 
