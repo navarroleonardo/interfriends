@@ -7,7 +7,7 @@ import org.springframework.beans.BeanUtils;
 @Data
 public class UserResponseDto {
 
-    private Long id;
+    private Long userId;
     private String name;
     private String email;
     private String birthdate;
