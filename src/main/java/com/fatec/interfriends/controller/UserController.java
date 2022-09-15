@@ -4,7 +4,7 @@ import com.fatec.interfriends.domain.dto.login.LoginRequestDto;
 import com.fatec.interfriends.domain.dto.login.LoginResponseDto;
 import com.fatec.interfriends.domain.dto.user.UserRequestDto;
 import com.fatec.interfriends.domain.dto.user.UserResponseDto;
-import com.fatec.interfriends.service.UserService;
+import com.fatec.interfriends.service.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

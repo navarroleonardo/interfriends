@@ -1,4 +1,4 @@
-package com.fatec.interfriends.service;
+package com.fatec.interfriends.service.user;
 
 import java.util.ArrayList;
 import java.util.List;
