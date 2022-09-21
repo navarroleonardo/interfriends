@@ -49,7 +49,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<UserResponseDto> alterUser(@PathVariable(value = "id") Long id, @RequestBody @Valid UserRequestDto userRequestDto) {
-		return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(id, userRequestDto));
+		return ResponseEntity.status(HttpStatus.OK).body(this.userService.updateUser(id, userRequestDto));
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")

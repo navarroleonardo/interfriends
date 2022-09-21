@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDto createUser(UserRequestDto userRequestDto, Boolean isAdmin) {
-		var newUser = new UserModel(userRequestDto);
+		UserModel newUser = new UserModel(userRequestDto);
 
 		Optional<UserModel> existingUser = userRepository.findByEmail(newUser.getEmail());
 
