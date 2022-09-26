@@ -3,9 +3,11 @@ package com.fatec.interfriends.service.product;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
 import com.fatec.interfriends.domain.model.ProductModel;
+import com.fatec.interfriends.domain.model.ProductSizeModel;
 import com.fatec.interfriends.domain.model.SizeModel;
 import com.fatec.interfriends.repository.ProductRepository;
 import com.fatec.interfriends.repository.ProductSizeRepository;
+//import com.fatec.interfriends.repository.ProductSizeRepository;
 import com.fatec.interfriends.repository.SizeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,13 +22,13 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    /*private final ProductSizeRepository productSizeRepository;*/
+    private final ProductSizeRepository productSizeRepository;
     private final SizeRepository sizeRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, SizeRepository sizeRepository/*, ProductSizeRepository productSizeRepository*/) {
+    public ProductServiceImpl(ProductRepository productRepository, SizeRepository sizeRepository, ProductSizeRepository productSizeRepository) {
         this.productRepository = productRepository;
         this.sizeRepository = sizeRepository;
-        /*this.productSizeRepository = productSizeRepository;*/
+        this.productSizeRepository = productSizeRepository;
     }
 
     @Override
@@ -36,6 +38,8 @@ public class ProductServiceImpl implements ProductService {
         return new ProductResponseDto(this.productRepository.save(productModel));
     }
 
+    
+    
     @Override
     public ProductResponseDto getProduct(Long id) {
         Optional<ProductModel> productModelOptional = this.productRepository.findById(id);
@@ -86,7 +90,18 @@ public class ProductServiceImpl implements ProductService {
         return new ProductResponseDto(productModelOptional.get());
     }
 
-    /*private List<SizeModel> getSizes(List<Long> sizesId) {
+	@Override
+	public ProductModel save(ProductModel product) {
+		
+		return this.productRepository.save(product);
+	}
+
+	@Override
+	public ProductModel get(Long id) {
+		return this.productRepository.findById(id).get();
+	}
+
+     /*private List<SizeModel> getSizes(List<Long> sizesId) {
         List<SizeModel> sizesModel = new ArrayList<>();
 
         sizesId.forEach((sizeId) -> {
@@ -99,4 +114,8 @@ public class ProductServiceImpl implements ProductService {
 
         return sizesModel;
     }*/
+	@Override
+	public  List<ProductSizeModel> getSizeAndQuantity(ProductRequestDto productRequestDto){
+		return this.productSizeRepository.findByProduct(new ProductModel(productRequestDto));
+	}
 }

@@ -9,7 +9,7 @@ import com.fatec.interfriends.domain.dto.login.LoginRequestDto;
 import com.fatec.interfriends.domain.dto.login.LoginResponseDto;
 import com.fatec.interfriends.domain.dto.user.UserRequestDto;
 import com.fatec.interfriends.domain.dto.user.UserResponseDto;
-import com.fatec.interfriends.domain.enums.RoleName;
+//import com.fatec.interfriends.domain.enums.RoleName;
 import com.fatec.interfriends.domain.model.RoleModel;
 import com.fatec.interfriends.repository.RoleRepository;
 import org.springframework.http.HttpStatus;
@@ -119,7 +119,8 @@ public class UserServiceImpl implements UserService {
 	private void addRoles (UserModel userModel, Boolean isAdmin) {
 		List<RoleModel> roles = new ArrayList<>();
 
-		Optional<RoleModel> userRole = roleRepository.findRoleByRoleName(RoleName.ROLE_USER.toString());
+		Optional<RoleModel> userRole = roleRepository.findRoleByRoleName("ROLE_USER");
+		//RoleName.ROLE_USER.toString()
 
 		if (userRole.isEmpty()) {
 			throw new RuntimeException("");
@@ -128,7 +129,8 @@ public class UserServiceImpl implements UserService {
 		roles.add(userRole.get());
 
 		if (isAdmin) {
-			Optional<RoleModel> adminRole = roleRepository.findRoleByRoleName(RoleName.ROLE_ADMIN.toString());
+			Optional<RoleModel> adminRole = roleRepository.findRoleByRoleName("ROLE_ADMIN");
+			//RoleName.ROLE_ADMIN.toString()
 
 			if (adminRole.isEmpty()) {
 				throw new RuntimeException("");

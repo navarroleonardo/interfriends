@@ -1,6 +1,11 @@
 package com.fatec.interfriends.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
+import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +13,7 @@ import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "product")
@@ -22,7 +24,7 @@ public class ProductModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long productId;
     @Column(nullable = false)
     private String name;
@@ -31,35 +33,32 @@ public class ProductModel implements Serializable {
     @Column(nullable = true)
     private String description;
 
-    /*@OneToMany(
-            mappedBy = "product",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-            )
-    private Set<ProductSizeModel> sizes;*/
+    
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(value = {"product", "id"}, allowSetters = true)
+    private List<ProductSizeModel> productSize = new ArrayList<ProductSizeModel>();
+    
 
     public ProductModel(ProductRequestDto productRequestDto) {
         BeanUtils.copyProperties(productRequestDto, this);
-        /*this.sizes = new HashSet<>();*/
+    }
+    
+    public ProductModel(ProductResponseDto productResponseDto) {
+        BeanUtils.copyProperties(productResponseDto, this);
     }
 
-    /*public void addSizes(List<SizeModel> sizeModels) {
-        sizeModels.forEach((sizeModel -> {
-            ProductSizeModel productSizeModel = new ProductSizeModel(this, sizeModel, 0L);
-            sizes.add(productSizeModel);
-        }));
+    public void addSize(SizeModel sizeModel) {
+        productSize.add(new ProductSizeModel(this, sizeModel));
     }
-
+    
+    public void addSize(SizeModel sizeModel, Long quantity) {
+        productSize.add(new ProductSizeModel(this, sizeModel, quantity));
+    }
+    
+    
     public void removeSize(SizeModel sizeModel) {
-        for (Iterator<ProductSizeModel> iterator = this.sizes.iterator(); iterator.hasNext();) {
-            ProductSizeModel productSizeModel = iterator.next();
+        productSize.remove(new ProductSizeModel(this, sizeModel));
+    }
 
-            if(productSizeModel.getProduct().equals(this) && productSizeModel.getSize().equals(sizeModel)) {
-                iterator.remove();
-                productSizeModel.setProduct(null);
-                productSizeModel.setSize(null);
-            }
-        }
-    }*/
 
 }
