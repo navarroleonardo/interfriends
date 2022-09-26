@@ -55,7 +55,8 @@ public class ProductController {
     	product.setPrice(150.0);
     	
     	
-    	//Searchin Sizes	
+    	//Searching Sizes direct by repository
+    	// --- Must create the SizeService ---
     	Optional<SizeModel> sizeP = sizeRep.findById(1l);
     	
     	Optional<SizeModel> sizeM = sizeRep.findById(2l);
