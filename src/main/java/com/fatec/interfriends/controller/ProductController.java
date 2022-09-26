@@ -3,7 +3,6 @@ package com.fatec.interfriends.controller;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
 import com.fatec.interfriends.domain.model.ProductModel;
-import com.fatec.interfriends.domain.model.ProductSizeModel;
 import com.fatec.interfriends.domain.model.SizeModel;
 import com.fatec.interfriends.repository.ProductSizeRepository;
 import com.fatec.interfriends.repository.SizeRepository;
@@ -13,10 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @RestController
@@ -24,14 +21,11 @@ import javax.validation.Valid;
 @RequestMapping("/product")
 public class ProductController {
 
-    private ProductService productService;
-    private final SizeRepository sizeRep;
-    private final ProductSizeRepository productsizeRep;
-
-    public ProductController (ProductService productService, SizeRepository sizeRep,ProductSizeRepository productsizeRep) {
+    private final ProductService productService;
+    private final SizeRepository sizeRepository;
+    public ProductController (ProductService productService, SizeRepository sizeRepository) {
         this.productService = productService;
-        this.sizeRep=sizeRep;
-        this.productsizeRep= productsizeRep;
+        this.sizeRepository = sizeRepository;
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -57,9 +51,9 @@ public class ProductController {
     	
     	//Searching Sizes direct by repository
     	// --- Must create the SizeService ---
-    	Optional<SizeModel> sizeP = sizeRep.findById(1l);
+    	Optional<SizeModel> sizeP = sizeRepository.findById(1L);
     	
-    	Optional<SizeModel> sizeM = sizeRep.findById(2l);
+    	Optional<SizeModel> sizeM = sizeRepository.findById(2L);
     	
 
     	// Inside Product, inserting size and quantity in ProductSizeModel List

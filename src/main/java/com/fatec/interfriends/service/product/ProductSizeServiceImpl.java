@@ -4,19 +4,10 @@ import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
 import com.fatec.interfriends.domain.model.ProductModel;
 import com.fatec.interfriends.domain.model.ProductSizeModel;
-import com.fatec.interfriends.domain.model.SizeModel;
-import com.fatec.interfriends.repository.ProductRepository;
 import com.fatec.interfriends.repository.ProductSizeRepository;
-//import com.fatec.interfriends.repository.ProductSizeRepository;
-import com.fatec.interfriends.repository.SizeRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import java.util.Optional;
 
 @Service
 public class ProductSizeServiceImpl implements ProductSizeService {

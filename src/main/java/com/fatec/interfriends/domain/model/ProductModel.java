@@ -1,8 +1,6 @@
 package com.fatec.interfriends.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
 
@@ -33,18 +31,12 @@ public class ProductModel implements Serializable {
     @Column(nullable = true)
     private String description;
 
-    
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = {"product", "id"}, allowSetters = true)
-    private List<ProductSizeModel> productSize = new ArrayList<ProductSizeModel>();
-    
+    private List<ProductSizeModel> productSize = new ArrayList<>();
 
     public ProductModel(ProductRequestDto productRequestDto) {
         BeanUtils.copyProperties(productRequestDto, this);
-    }
-    
-    public ProductModel(ProductResponseDto productResponseDto) {
-        BeanUtils.copyProperties(productResponseDto, this);
     }
 
     public void addSize(SizeModel sizeModel) {

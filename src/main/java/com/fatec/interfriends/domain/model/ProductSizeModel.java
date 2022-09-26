@@ -1,6 +1,5 @@
 package com.fatec.interfriends.domain.model;
 
-import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,12 +7,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
 
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "product_size")
+@Table(name = "products_sizes")
 @AllArgsConstructor
 public class ProductSizeModel implements Serializable {
  
@@ -30,7 +28,7 @@ public class ProductSizeModel implements Serializable {
     @MapsId("sizeId")
     private SizeModel size;
     
-    private Long quantity = 0l;
+    private Long quantity = 0L;
     
     public ProductSizeModel(ProductModel productModel, SizeModel sizeModel) {
 		this.product = productModel;

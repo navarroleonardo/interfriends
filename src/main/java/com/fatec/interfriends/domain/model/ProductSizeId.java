@@ -11,19 +11,13 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProductSizeId implements Serializable {
  
     private static final long serialVersionUID = 1L;
  
     private Long productId;
     private Long sizeId;
- 
-
- 
-    public ProductSizeId(Long productId, Long sizeId) {
-        this.productId = productId;
-        this.sizeId = sizeId;
-    }
  
 }
 
