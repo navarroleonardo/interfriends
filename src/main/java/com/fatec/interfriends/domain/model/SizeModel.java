@@ -1,8 +1,10 @@
 package com.fatec.interfriends.domain.model;
 
+import com.fatec.interfriends.domain.dto.size.SizeRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,5 +25,8 @@ public class SizeModel implements Serializable {
     @Column(nullable = true)
     private String description;
 
+    public SizeModel(SizeRequestDto sizeRequestDto) {
+        BeanUtils.copyProperties(sizeRequestDto, this);
+    }
 
 }
