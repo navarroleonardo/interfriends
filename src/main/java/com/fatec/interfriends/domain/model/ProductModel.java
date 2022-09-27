@@ -2,7 +2,6 @@ package com.fatec.interfriends.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
-import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,24 +32,23 @@ public class ProductModel implements Serializable {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnoreProperties(value = {"product", "id"}, allowSetters = true)
-    private List<ProductSizeModel> productSize = new ArrayList<>();
+    private List<ProductSizeModel> sizes = new ArrayList<>();
 
     public ProductModel(ProductRequestDto productRequestDto) {
         BeanUtils.copyProperties(productRequestDto, this);
     }
 
     public void addSize(SizeModel sizeModel) {
-        productSize.add(new ProductSizeModel(this, sizeModel));
+        sizes.add(new ProductSizeModel(this, sizeModel));
     }
     
     public void addSize(SizeModel sizeModel, Long quantity) {
-        productSize.add(new ProductSizeModel(this, sizeModel, quantity));
+        sizes.add(new ProductSizeModel(this, sizeModel, quantity));
     }
     
     
     public void removeSize(SizeModel sizeModel) {
-        productSize.remove(new ProductSizeModel(this, sizeModel));
+        sizes.remove(new ProductSizeModel(this, sizeModel));
     }
-
 
 }

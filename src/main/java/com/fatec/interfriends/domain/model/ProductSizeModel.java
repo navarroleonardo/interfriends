@@ -11,10 +11,10 @@ import java.io.Serializable;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "products_sizes")
+@Table(name = "product_size")
 @AllArgsConstructor
 public class ProductSizeModel implements Serializable {
- 
+
     private static final long serialVersionUID = 1L;
 
 	@EmbeddedId

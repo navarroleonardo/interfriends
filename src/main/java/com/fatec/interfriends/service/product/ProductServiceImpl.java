@@ -3,17 +3,13 @@ package com.fatec.interfriends.service.product;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
 import com.fatec.interfriends.domain.model.ProductModel;
-import com.fatec.interfriends.domain.model.ProductSizeModel;
 import com.fatec.interfriends.domain.model.SizeModel;
 import com.fatec.interfriends.repository.ProductRepository;
-import com.fatec.interfriends.repository.ProductSizeRepository;
-//import com.fatec.interfriends.repository.ProductSizeRepository;
 import com.fatec.interfriends.repository.SizeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
@@ -22,23 +18,21 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductSizeRepository productSizeRepository;
     private final SizeRepository sizeRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, SizeRepository sizeRepository, ProductSizeRepository productSizeRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, SizeRepository sizeRepository) {
         this.productRepository = productRepository;
         this.sizeRepository = sizeRepository;
-        this.productSizeRepository = productSizeRepository;
     }
 
     @Override
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
         ProductModel productModel = new ProductModel(productRequestDto);
 
+        this.attachSizesToProduct(productModel, productRequestDto.getSizes());
+
         return new ProductResponseDto(this.productRepository.save(productModel));
     }
-
-    
     
     @Override
     public ProductResponseDto getProduct(Long id) {
@@ -62,19 +56,8 @@ public class ProductServiceImpl implements ProductService {
         ProductModel productModel = new ProductModel(productRequestDto);
 
         productModel.setProductId(productModelOptional.get().getProductId());
-        /*productModel.addSizes(this.getSizes(productRequestDto.getSizes()));*/
 
-        ProductResponseDto productResponseDto = new ProductResponseDto(this.productRepository.save(productModel));
-
-        /*productRequestDto.getSizes().forEach((sizeId) -> {
-            Optional<SizeModel> sizeModel = this.sizeRepository.findById(sizeId);
-
-            if (sizeModel.isPresent()) {
-                this.productSizeRepository.save(new ProductSizeModel(productModel, sizeModel.get(), 0L));
-            }
-        });*/
-
-        return productResponseDto;
+        return new ProductResponseDto(this.productRepository.save(productModel));
     }
 
     @Override
@@ -90,32 +73,13 @@ public class ProductServiceImpl implements ProductService {
         return new ProductResponseDto(productModelOptional.get());
     }
 
-	@Override
-	public ProductModel save(ProductModel product) {
-		
-		return this.productRepository.save(product);
-	}
+    private void attachSizesToProduct(ProductModel productModel, List<Long> sizeIds) {
+        sizeIds.forEach((sizeId) -> {
+            Optional<SizeModel> sizeModelOptional = this.sizeRepository.findById(sizeId);
 
-	@Override
-	public ProductModel get(Long id) {
-		return this.productRepository.findById(id).get();
-	}
-
-     /*private List<SizeModel> getSizes(List<Long> sizesId) {
-        List<SizeModel> sizesModel = new ArrayList<>();
-
-        sizesId.forEach((sizeId) -> {
-            Optional<SizeModel> sizeModel = this.sizeRepository.findById(sizeId);
-
-            if (sizeModel.isPresent()) {
-                sizesModel.add(sizeModel.get());
+            if (sizeModelOptional.isPresent()) {
+                productModel.addSize(sizeModelOptional.get());
             }
         });
-
-        return sizesModel;
-    }*/
-	@Override
-	public  List<ProductSizeModel> getSizeAndQuantity(ProductRequestDto productRequestDto){
-		return this.productSizeRepository.findByProduct(new ProductModel(productRequestDto));
-	}
+    }
 }
