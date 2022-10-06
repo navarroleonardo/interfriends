@@ -28,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserModel userModel = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
 
-        return new User(userModel.getName(), userModel.getPassword(), getAuthority(userModel));
+        return new User(userModel.getEmail(), userModel.getPassword(), getAuthority(userModel));
     }
 
     private Set<SimpleGrantedAuthority> getAuthority(UserModel user) {

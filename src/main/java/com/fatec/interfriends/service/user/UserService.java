@@ -1,4 +1,4 @@
-package com.fatec.interfriends.service;
+package com.fatec.interfriends.service.user;
 
 import com.fatec.interfriends.domain.dto.login.LoginRequestDto;
 import com.fatec.interfriends.domain.dto.login.LoginResponseDto;
