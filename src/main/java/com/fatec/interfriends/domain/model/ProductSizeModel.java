@@ -17,10 +17,10 @@ public class ProductSizeModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
+    @EmbeddedId
     private ProductSizeId id = new ProductSizeId();
 
-	@ManyToOne
+    @ManyToOne
     @MapsId("productId")
     private ProductModel product;
 
