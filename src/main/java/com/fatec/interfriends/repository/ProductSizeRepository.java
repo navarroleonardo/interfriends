@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductSizeRepository extends JpaRepository<ProductSizeModel, ProductSizeId> {
 	
-	List<ProductSizeModel> findByProduct(ProductModel product);
+	List<ProductSizeModel> findAllByProduct(ProductModel product);
+	void deleteByProduct(ProductModel productModel);
 
 }

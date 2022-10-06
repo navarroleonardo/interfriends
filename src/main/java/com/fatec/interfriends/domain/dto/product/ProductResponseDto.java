@@ -17,10 +17,8 @@ public class ProductResponseDto {
     private String description;
     private List<ProductSizeResponseDto> sizes = new ArrayList<>();
 
-    public ProductResponseDto(ProductModel productModel) {
+    public ProductResponseDto(ProductModel productModel, List<ProductSizeModel> productSizeModels) {
         BeanUtils.copyProperties(productModel, this);
-        for (ProductSizeModel productSizeModel : productModel.getSizes()) {
-            this.sizes.add(new ProductSizeResponseDto(productSizeModel));
-        }
+        productSizeModels.forEach(productSizeModel -> this.sizes.add(new ProductSizeResponseDto(productSizeModel)));
     }
 }

@@ -19,12 +19,12 @@ public class ProductSizeModel implements Serializable {
 
 	@EmbeddedId
     private ProductSizeId id = new ProductSizeId();
- 
-	@ManyToOne(fetch = FetchType.EAGER)
+
+	@ManyToOne
     @MapsId("productId")
     private ProductModel product;
- 
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne
     @MapsId("sizeId")
     private SizeModel size;
     
@@ -40,6 +40,5 @@ public class ProductSizeModel implements Serializable {
 		this.size = sizeModel;
 		this.quantity = quantity;
 	}
-
 
 }
