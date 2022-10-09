@@ -21,7 +21,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public InventoryResponseDto addProductsToInventory(InventoryRequestDto inventoryRequestDto) {
+    public ProductSizeModel addProductsToInventory(InventoryRequestDto inventoryRequestDto) {
         ProductSizeId productSizeId = new ProductSizeId(inventoryRequestDto.getProductId(), inventoryRequestDto.getSizeId());
         Optional<ProductSizeModel> productSizeModelOptional = this.productSizeRepository.findById(productSizeId);
 
@@ -33,13 +33,11 @@ public class InventoryServiceImpl implements InventoryService {
 
         productSizeModel.setQuantity(productSizeModel.getQuantity() + inventoryRequestDto.getQuantity());
 
-        productSizeModel = this.productSizeRepository.save(productSizeModel);
-
-        return new InventoryResponseDto(productSizeModel);
+        return this.productSizeRepository.save(productSizeModel);
     }
 
     @Override
-    public InventoryResponseDto removeProductsFromInventory(InventoryRequestDto inventoryRequestDto) {
+    public ProductSizeModel removeProductsFromInventory(InventoryRequestDto inventoryRequestDto) {
         ProductSizeId productSizeId = new ProductSizeId(inventoryRequestDto.getProductId(), inventoryRequestDto.getSizeId());
         Optional<ProductSizeModel> productSizeModelOptional = this.productSizeRepository.findById(productSizeId);
 
@@ -51,9 +49,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         productSizeModel.setQuantity(productSizeModel.getQuantity() - inventoryRequestDto.getQuantity());
 
-        productSizeModel = this.productSizeRepository.save(productSizeModel);
-
-        return new InventoryResponseDto(productSizeModel);
+        return this.productSizeRepository.save(productSizeModel);
     }
 
 }

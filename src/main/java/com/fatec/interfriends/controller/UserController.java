@@ -26,36 +26,36 @@ public class UserController {
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) throws AuthenticationException {
-		return ResponseEntity.status(HttpStatus.OK).body(this.userService.login(loginRequestDto));
+		return ResponseEntity.status(HttpStatus.OK).body(new LoginResponseDto(this.userService.login(loginRequestDto)));
 	}
 
 	@PostMapping
 	public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserRequestDto userRequestDto) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.createUser(userRequestDto, Boolean.FALSE));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponseDto(this.userService.createUser(userRequestDto, Boolean.FALSE)));
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/admin")
 	public ResponseEntity<UserResponseDto> createAdmin(@RequestBody @Valid UserRequestDto userRequestDto) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.createUser(userRequestDto, Boolean.TRUE));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponseDto(this.userService.createUser(userRequestDto, Boolean.TRUE)));
 	}
 
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@GetMapping("/{id}")
 	public ResponseEntity<UserResponseDto> getUser(@PathVariable(value = "id") Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.userService.getUser(id));
+		return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(this.userService.getUser(id)));
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<UserResponseDto> alterUser(@PathVariable(value = "id") Long id, @RequestBody @Valid UserRequestDto userRequestDto) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.userService.updateUser(id, userRequestDto));
+		return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(this.userService.updateUser(id, userRequestDto)));
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<UserResponseDto> deleteUser(@PathVariable(value = "id") Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.userService.deleteUser(id));
+		return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(this.userService.deleteUser(id)));
 	}
 
 }

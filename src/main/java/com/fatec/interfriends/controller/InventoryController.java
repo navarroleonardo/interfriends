@@ -26,14 +26,14 @@ public class InventoryController {
     @PatchMapping("add")
     @Transactional
     public ResponseEntity<InventoryResponseDto> addProductsToInventory(@RequestBody @Valid InventoryRequestDto inventoryRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.inventoryService.addProductsToInventory(inventoryRequestDto));
+        return ResponseEntity.status(HttpStatus.OK).body(new InventoryResponseDto(this.inventoryService.addProductsToInventory(inventoryRequestDto)));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("remove")
     @Transactional
     public ResponseEntity<InventoryResponseDto> removeProductsFromInventory(@RequestBody @Valid InventoryRequestDto inventoryRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.inventoryService.removeProductsFromInventory(inventoryRequestDto));
+        return ResponseEntity.status(HttpStatus.OK).body(new InventoryResponseDto(this.inventoryService.removeProductsFromInventory(inventoryRequestDto)));
     }
 
 

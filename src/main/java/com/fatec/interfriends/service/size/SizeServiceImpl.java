@@ -1,7 +1,6 @@
 package com.fatec.interfriends.service.size;
 
 import com.fatec.interfriends.domain.dto.size.SizeRequestDto;
-import com.fatec.interfriends.domain.dto.size.SizeResponseDto;
 import com.fatec.interfriends.domain.model.ProductSizeModel;
 import com.fatec.interfriends.domain.model.SizeModel;
 import com.fatec.interfriends.repository.SizeRepository;
@@ -22,25 +21,25 @@ public class SizeServiceImpl implements SizeService {
     }
 
     @Override
-    public SizeResponseDto createSize(SizeRequestDto sizeRequestDto) {
+    public SizeModel createSize(SizeRequestDto sizeRequestDto) {
         SizeModel sizeModel = new SizeModel(sizeRequestDto);
 
-        return new SizeResponseDto(this.sizeRepository.save(sizeModel));
+        return this.sizeRepository.save(sizeModel);
     }
 
     @Override
-    public SizeResponseDto getSize(Long id) {
+    public SizeModel getSize(Long id) {
         Optional<SizeModel> sizeModelOptional = this.sizeRepository.findById(id);
 
         if (sizeModelOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tamanho não encontrado.");
         }
 
-        return new SizeResponseDto(sizeModelOptional.get());
+        return sizeModelOptional.get();
     }
 
     @Override
-    public List<SizeModel> getSizes(List<Long> sizeIds) {
+    public List<SizeModel> getSizesById(List<Long> sizeIds) {
         return sizeIds.stream()
                 .map(this.sizeRepository::findById)
                 .filter(Optional::isPresent)
@@ -56,7 +55,7 @@ public class SizeServiceImpl implements SizeService {
     }
 
     @Override
-    public SizeResponseDto updateSize(Long id, SizeRequestDto sizeRequestDto) {
+    public SizeModel updateSize(Long id, SizeRequestDto sizeRequestDto) {
         Optional<SizeModel> sizeModelOptional = this.sizeRepository.findById(id);
 
         if (sizeModelOptional.isEmpty()) {
@@ -66,11 +65,11 @@ public class SizeServiceImpl implements SizeService {
         SizeModel sizeModel = new SizeModel(sizeRequestDto);
         sizeModel.setSizeId(sizeModelOptional.get().getSizeId());
 
-        return new SizeResponseDto(this.sizeRepository.save(sizeModel));
+        return this.sizeRepository.save(sizeModel);
     }
 
     @Override
-    public SizeResponseDto deleteSize(Long id) {
+    public SizeModel deleteSize(Long id) {
         Optional<SizeModel> sizeModelOptional = this.sizeRepository.findById(id);
 
         if (sizeModelOptional.isEmpty()) {
@@ -79,6 +78,6 @@ public class SizeServiceImpl implements SizeService {
 
         this.sizeRepository.delete(sizeModelOptional.get());
 
-        return new SizeResponseDto(sizeModelOptional.get());
+        return sizeModelOptional.get();
     }
 }

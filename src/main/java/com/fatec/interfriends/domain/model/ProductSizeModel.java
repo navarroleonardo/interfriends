@@ -10,8 +10,8 @@ import java.io.Serializable;
 
 @Entity
 @Data
-@NoArgsConstructor
 @Table(name = "product_size")
+@NoArgsConstructor
 @AllArgsConstructor
 public class ProductSizeModel implements Serializable {
 

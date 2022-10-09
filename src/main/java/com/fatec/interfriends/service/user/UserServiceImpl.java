@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+	public String login(LoginRequestDto loginRequestDto) {
 		final Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(
 						loginRequestDto.getUsername(),
@@ -51,25 +51,22 @@ public class UserServiceImpl implements UserService {
 		);
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		final String token = tokenProvider.generateToken(authentication);
-
-		return new LoginResponseDto(token);
-
+		return tokenProvider.generateToken(authentication);
 	}
 
 	@Override
-	public UserResponseDto getUser (Long id){
+	public UserModel getUser (Long id){
 		Optional<UserModel> userModelOptional = userRepository.findById(id);
 
 		if (!userModelOptional.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
 		}
 
-		return new UserResponseDto(userModelOptional.get());
+		return userModelOptional.get();
 	}
 
 	@Override
-	public UserResponseDto createUser(UserRequestDto userRequestDto, Boolean isAdmin) {
+	public UserModel createUser(UserRequestDto userRequestDto, Boolean isAdmin) {
 		UserModel newUser = new UserModel(userRequestDto);
 
 		Optional<UserModel> existingUser = userRepository.findByEmail(newUser.getEmail());
@@ -81,11 +78,11 @@ public class UserServiceImpl implements UserService {
 		addRoles(newUser, isAdmin);
 		encryptPassword(newUser);
 
-		return new UserResponseDto(userRepository.save(newUser));
+		return userRepository.save(newUser);
 	}
 
 	@Override
-	public UserResponseDto updateUser (Long id, UserRequestDto userRequestDto) {
+	public UserModel updateUser (Long id, UserRequestDto userRequestDto) {
 		Optional<UserModel> userModelOptional = userRepository.findById(id);
 
 		if (!userModelOptional.isPresent()) {
@@ -96,11 +93,11 @@ public class UserServiceImpl implements UserService {
 
 		userModel.setUserId(userModelOptional.get().getUserId());
 
-		return new UserResponseDto(userRepository.save(userModel));
+		return userRepository.save(userModel);
 	}
 
 	@Override
-	public UserResponseDto deleteUser (Long id) {
+	public UserModel deleteUser (Long id) {
 		Optional<UserModel> userModelOptional = userRepository.findById(id);
 
 		if (!userModelOptional.isPresent()) {
@@ -109,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
 		userRepository.delete(userModelOptional.get());
 
-		return new UserResponseDto(userModelOptional.get());
+		return userModelOptional.get();
 	}
 
 	private void encryptPassword (UserModel userModel) {

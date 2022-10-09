@@ -1,11 +1,11 @@
 package com.fatec.interfriends.service.inventory;
 
 import com.fatec.interfriends.domain.dto.inventory.InventoryRequestDto;
-import com.fatec.interfriends.domain.dto.inventory.InventoryResponseDto;
+import com.fatec.interfriends.domain.model.ProductSizeModel;
 
 public interface InventoryService {
 
-    InventoryResponseDto addProductsToInventory(InventoryRequestDto inventoryRequestDto);
-    InventoryResponseDto removeProductsFromInventory(InventoryRequestDto inventoryRequestDto);
+    ProductSizeModel addProductsToInventory(InventoryRequestDto inventoryRequestDto);
+    ProductSizeModel removeProductsFromInventory(InventoryRequestDto inventoryRequestDto);
 
 }
