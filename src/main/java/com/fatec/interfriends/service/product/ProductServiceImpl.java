@@ -5,8 +5,12 @@ import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
 import com.fatec.interfriends.domain.model.ProductModel;
 import com.fatec.interfriends.domain.model.ProductSizeModel;
 import com.fatec.interfriends.domain.model.SizeModel;
+import com.fatec.interfriends.repository.ProductCriteriaRepository;
 import com.fatec.interfriends.repository.ProductRepository;
+import com.fatec.interfriends.repository.query.ProductPage;
+import com.fatec.interfriends.repository.query.ProductSearchCriteria;
 import com.fatec.interfriends.service.size.SizeService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,11 +23,13 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductCriteriaRepository productCriteriaRepository;
     private final SizeService sizeService;
     private final ProductSizeService productSizeService;
 
-    public ProductServiceImpl(ProductRepository productRepository, SizeService sizeService, ProductSizeService productSizeService) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductCriteriaRepository productCriteriaRepository, SizeService sizeService, ProductSizeService productSizeService) {
         this.productRepository = productRepository;
+        this.productCriteriaRepository = productCriteriaRepository;
         this.sizeService = sizeService;
         this.productSizeService = productSizeService;
     }
@@ -51,6 +57,11 @@ public class ProductServiceImpl implements ProductService {
         List<ProductSizeModel> productSizeModels = this.productSizeService.getProductSizesByProduct(productModelOptional.get());
 
         return new ProductResponseDto(productModelOptional.get(), productSizeModels);
+    }
+
+    @Override
+    public Page<ProductModel> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {
+        return this.productCriteriaRepository.findAllWithFilters(productPage, productSearchCriteria);
     }
 
     @Override

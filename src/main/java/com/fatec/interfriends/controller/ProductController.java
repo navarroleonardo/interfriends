@@ -2,7 +2,11 @@ package com.fatec.interfriends.controller;
 
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
+import com.fatec.interfriends.domain.model.ProductModel;
+import com.fatec.interfriends.repository.query.ProductPage;
+import com.fatec.interfriends.repository.query.ProductSearchCriteria;
 import com.fatec.interfriends.service.product.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +37,11 @@ public class ProductController {
     @Transactional
     public ResponseEntity<ProductResponseDto> getProduct(@PathVariable(value = "id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProduct(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ProductModel>> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria){
+        return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProducts(productPage, productSearchCriteria));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
