@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -42,6 +43,9 @@ public class UserModel implements Serializable {
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
 	private List<RoleModel> roles;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<AddressModel> addresses = new ArrayList<>();
 
 	public UserModel (UserRequestDto userRequestDto) {
 		BeanUtils.copyProperties(userRequestDto, this);
