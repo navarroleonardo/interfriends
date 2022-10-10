@@ -33,8 +33,6 @@ public class UserModel implements Serializable {
 	private String password;
 	@Column(nullable = false)
 	private String birthdate;
-	@Column(nullable = false)
-	private String phone;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(
@@ -46,6 +44,9 @@ public class UserModel implements Serializable {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<AddressModel> addresses = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<PhoneModel> phones = new ArrayList<>();
 
 	public UserModel (UserRequestDto userRequestDto) {
 		BeanUtils.copyProperties(userRequestDto, this);

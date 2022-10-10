@@ -15,7 +15,5 @@ public class UserRequestDto {
 	private String password;
 	@NotNull
 	private String birthdate;
-	@NotNull
-	private String phone;
 
 }
