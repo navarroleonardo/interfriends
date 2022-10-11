@@ -1,9 +1,8 @@
 package com.fatec.interfriends.service.inventory;
 
 import com.fatec.interfriends.domain.dto.inventory.InventoryRequestDto;
-import com.fatec.interfriends.domain.dto.inventory.InventoryResponseDto;
 import com.fatec.interfriends.domain.model.ProductSizeId;
-import com.fatec.interfriends.domain.model.ProductSizeModel;
+import com.fatec.interfriends.domain.model.ProductSize;
 import com.fatec.interfriends.repository.ProductSizeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,35 +20,35 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public ProductSizeModel addProductsToInventory(InventoryRequestDto inventoryRequestDto) {
+    public ProductSize addProductsToInventory(InventoryRequestDto inventoryRequestDto) {
         ProductSizeId productSizeId = new ProductSizeId(inventoryRequestDto.getProductId(), inventoryRequestDto.getSizeId());
-        Optional<ProductSizeModel> productSizeModelOptional = this.productSizeRepository.findById(productSizeId);
+        Optional<ProductSize> optionalProductSize = this.productSizeRepository.findById(productSizeId);
 
-        if (productSizeModelOptional.isEmpty()) {
+        if (optionalProductSize.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O tamanho selecionado não está disponível no produto selecionado.");
         }
 
-        ProductSizeModel productSizeModel = productSizeModelOptional.get();
+        ProductSize productSize = optionalProductSize.get();
 
-        productSizeModel.setQuantity(productSizeModel.getQuantity() + inventoryRequestDto.getQuantity());
+        productSize.setQuantity(productSize.getQuantity() + inventoryRequestDto.getQuantity());
 
-        return this.productSizeRepository.save(productSizeModel);
+        return this.productSizeRepository.save(productSize);
     }
 
     @Override
-    public ProductSizeModel removeProductsFromInventory(InventoryRequestDto inventoryRequestDto) {
+    public ProductSize removeProductsFromInventory(InventoryRequestDto inventoryRequestDto) {
         ProductSizeId productSizeId = new ProductSizeId(inventoryRequestDto.getProductId(), inventoryRequestDto.getSizeId());
-        Optional<ProductSizeModel> productSizeModelOptional = this.productSizeRepository.findById(productSizeId);
+        Optional<ProductSize> optionalProductSize = this.productSizeRepository.findById(productSizeId);
 
-        if (productSizeModelOptional.isEmpty()) {
+        if (optionalProductSize.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O tamanho selecionado não está disponível no produto selecionado.");
         }
 
-        ProductSizeModel productSizeModel = productSizeModelOptional.get();
+        ProductSize productSize = optionalProductSize.get();
 
-        productSizeModel.setQuantity(productSizeModel.getQuantity() - inventoryRequestDto.getQuantity());
+        productSize.setQuantity(productSize.getQuantity() - inventoryRequestDto.getQuantity());
 
-        return this.productSizeRepository.save(productSizeModel);
+        return this.productSizeRepository.save(productSize);
     }
 
 }

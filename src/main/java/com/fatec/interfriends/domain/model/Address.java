@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "address")
-public class AddressModel implements Serializable {
+public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,9 +31,9 @@ public class AddressModel implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    private UserModel user;
+    private User user;
 
-    public AddressModel(AddressRequestDto addressRequestDto) {
+    public Address(AddressRequestDto addressRequestDto) {
         BeanUtils.copyProperties(addressRequestDto, this);
     }
 

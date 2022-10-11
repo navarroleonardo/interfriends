@@ -2,7 +2,7 @@ package com.fatec.interfriends.controller;
 
 import com.fatec.interfriends.domain.dto.address.AddressRequestDto;
 import com.fatec.interfriends.domain.dto.address.AddressResponseDto;
-import com.fatec.interfriends.domain.model.AddressModel;
+import com.fatec.interfriends.domain.model.Address;
 import com.fatec.interfriends.service.address.AddressService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +42,7 @@ public class AddressController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/user/{userId}")
     @Transactional
-    public ResponseEntity<Page<AddressModel>> getAddressByUser(@PathVariable(value = "userId") Long userId, Pageable pageable) {
+    public ResponseEntity<Page<Address>> getAddressByUser(@PathVariable(value = "userId") Long userId, Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(this.addressService.getAddressByUser(userId, pageable));
     }
 

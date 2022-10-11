@@ -2,7 +2,7 @@ package com.fatec.interfriends.controller;
 
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
-import com.fatec.interfriends.domain.model.ProductModel;
+import com.fatec.interfriends.domain.model.Product;
 import com.fatec.interfriends.repository.query.ProductPage;
 import com.fatec.interfriends.repository.query.ProductSearchCriteria;
 import com.fatec.interfriends.service.product.ProductService;
@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductModel>> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria){
+    public ResponseEntity<Page<Product>> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria){
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProducts(productPage, productSearchCriteria));
     }
 

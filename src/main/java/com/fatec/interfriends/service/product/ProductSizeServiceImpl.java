@@ -1,9 +1,9 @@
 package com.fatec.interfriends.service.product;
 
-import com.fatec.interfriends.domain.model.ProductModel;
+import com.fatec.interfriends.domain.model.Product;
 import com.fatec.interfriends.domain.model.ProductSizeId;
-import com.fatec.interfriends.domain.model.ProductSizeModel;
-import com.fatec.interfriends.domain.model.SizeModel;
+import com.fatec.interfriends.domain.model.ProductSize;
+import com.fatec.interfriends.domain.model.Size;
 import com.fatec.interfriends.repository.ProductSizeRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,32 +18,32 @@ public class ProductSizeServiceImpl implements ProductSizeService {
         this.productSizeRepository = productSizeRepository;
     }
 
-	public List<ProductSizeModel> bindSizesToProduct(ProductModel productModel, List<SizeModel> sizeModels) {
-		return sizeModels.stream()
-				.map(sizeModel -> this.productSizeRepository.save(new ProductSizeModel(productModel, sizeModel)))
+	public List<ProductSize> bindSizesToProduct(Product product, List<Size> sizes) {
+		return sizes.stream()
+				.map(size -> this.productSizeRepository.save(new ProductSize(product, size)))
 				.toList();
 	}
 
 	@Override
-	public List<ProductSizeModel> getProductSizesByProduct(ProductModel productModel) {
-		return this.productSizeRepository.findAllByProduct(productModel);
+	public List<ProductSize> getProductSizesByProduct(Product product) {
+		return this.productSizeRepository.findAllByProduct(product);
 	}
 
 	@Override
-	public void deleteByProduct(ProductModel productModel) {
-		this.productSizeRepository.deleteByProduct(productModel);
+	public void deleteByProduct(Product product) {
+		this.productSizeRepository.deleteByProduct(product);
 	}
 
-	public List<ProductSizeModel> updateSizesOfProduct(List<SizeModel> persistentProductSizeModels, List<SizeModel> requestSizeModels, ProductModel productModel) {
-		requestSizeModels.stream()
-				.filter(sizeModel -> !persistentProductSizeModels.contains(sizeModel))
-				.forEach(sizeModel ->  this.productSizeRepository.save(new ProductSizeModel(productModel, sizeModel)));
+	public List<ProductSize> updateSizesOfProduct(List<Size> persistentProductSizes, List<Size> requestSizes, Product product) {
+		requestSizes.stream()
+				.filter(size -> !persistentProductSizes.contains(size))
+				.forEach(size ->  this.productSizeRepository.save(new ProductSize(product, size)));
 
-		persistentProductSizeModels.stream()
-				.filter(sizeModel -> !requestSizeModels.contains(sizeModel))
-				.forEach(sizeModel -> this.productSizeRepository.deleteById(new ProductSizeId(productModel.getProductId(), sizeModel.getSizeId())));
+		persistentProductSizes.stream()
+				.filter(size -> !requestSizes.contains(size))
+				.forEach(size -> this.productSizeRepository.deleteById(new ProductSizeId(product.getProductId(), size.getSizeId())));
 
-		return this.getProductSizesByProduct(productModel);
+		return this.getProductSizesByProduct(product);
 	}
 
 }

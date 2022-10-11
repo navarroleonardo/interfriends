@@ -1,7 +1,7 @@
 package com.fatec.interfriends.domain.dto.product;
 
-import com.fatec.interfriends.domain.model.ProductModel;
-import com.fatec.interfriends.domain.model.ProductSizeModel;
+import com.fatec.interfriends.domain.model.Product;
+import com.fatec.interfriends.domain.model.ProductSize;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
@@ -17,8 +17,8 @@ public class ProductResponseDto {
     private String description;
     private List<ProductSizeResponseDto> sizes = new ArrayList<>();
 
-    public ProductResponseDto(ProductModel productModel, List<ProductSizeModel> productSizeModels) {
-        BeanUtils.copyProperties(productModel, this);
-        productSizeModels.forEach(productSizeModel -> this.sizes.add(new ProductSizeResponseDto(productSizeModel)));
+    public ProductResponseDto(Product product, List<ProductSize> productSizes) {
+        BeanUtils.copyProperties(product, this);
+        productSizes.forEach(productSize -> this.sizes.add(new ProductSizeResponseDto(productSize)));
     }
 }

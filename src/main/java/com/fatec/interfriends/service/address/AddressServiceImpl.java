@@ -1,8 +1,8 @@
 package com.fatec.interfriends.service.address;
 
 import com.fatec.interfriends.domain.dto.address.AddressRequestDto;
-import com.fatec.interfriends.domain.model.AddressModel;
-import com.fatec.interfriends.domain.model.UserModel;
+import com.fatec.interfriends.domain.model.Address;
+import com.fatec.interfriends.domain.model.User;
 import com.fatec.interfriends.repository.AddressRepository;
 import com.fatec.interfriends.service.user.UserService;
 import org.springframework.data.domain.Page;
@@ -25,61 +25,61 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressModel createAddress(AddressRequestDto addressRequestDto) {
-        AddressModel addressModel = new AddressModel(addressRequestDto);
+    public Address createAddress(AddressRequestDto addressRequestDto) {
+        Address address = new Address(addressRequestDto);
 
-        UserModel userModel = this.userService.getUser(addressRequestDto.getUserId());
-        addressModel.setUser(userModel);
+        User user = this.userService.getUser(addressRequestDto.getUserId());
+        address.setUser(user);
 
-        return this.addressRepository.save(addressModel);
+        return this.addressRepository.save(address);
     }
 
     @Override
-    public AddressModel getAddress(Long addressId) {
-        Optional<AddressModel> optionalAddressModel = this.addressRepository.findById(addressId);
+    public Address getAddress(Long addressId) {
+        Optional<Address> optionalAddress = this.addressRepository.findById(addressId);
 
-        if (!optionalAddressModel.isPresent()) {
+        if (!optionalAddress.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado.");
         }
 
-        return optionalAddressModel.get();
+        return optionalAddress.get();
     }
 
     @Override
-    public Page<AddressModel> getAddressByUser(Long userId, Pageable pageable) {
-        UserModel userModel = this.userService.getUser(userId);
+    public Page<Address> getAddressByUser(Long userId, Pageable pageable) {
+        User user = this.userService.getUser(userId);
 
-        return this.addressRepository.findAllByUser(userModel, pageable);
+        return this.addressRepository.findAllByUser(user, pageable);
     }
 
     @Override
-    public AddressModel updateAddress(Long addressId, AddressRequestDto addressRequestDto) {
-        Optional<AddressModel> optionalAddressModel = this.addressRepository.findById(addressId);
+    public Address updateAddress(Long addressId, AddressRequestDto addressRequestDto) {
+        Optional<Address> optionalAddress = this.addressRepository.findById(addressId);
 
-        if (!optionalAddressModel.isPresent()) {
+        if (!optionalAddress.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado.");
         }
 
-        AddressModel addressModel = new AddressModel(addressRequestDto);
+        Address address = new Address(addressRequestDto);
 
-        UserModel userModel = this.userService.getUser(addressRequestDto.getUserId());
-        addressModel.setUser(userModel);
-        addressModel.setAddressId(optionalAddressModel.get().getAddressId());
+        User user = this.userService.getUser(addressRequestDto.getUserId());
+        address.setUser(user);
+        address.setAddressId(optionalAddress.get().getAddressId());
 
-        return this.addressRepository.save(addressModel);
+        return this.addressRepository.save(address);
     }
 
     @Override
-    public AddressModel deleteAddress(Long addressId) {
-        Optional<AddressModel> optionalAddressModel = this.addressRepository.findById(addressId);
+    public Address deleteAddress(Long addressId) {
+        Optional<Address> optionalAddress = this.addressRepository.findById(addressId);
 
-        if (!optionalAddressModel.isPresent()) {
+        if (!optionalAddress.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado.");
         }
 
-        this.addressRepository.delete(optionalAddressModel.get());
+        this.addressRepository.delete(optionalAddress.get());
 
-        return optionalAddressModel.get();
+        return optionalAddress.get();
     }
 
 }

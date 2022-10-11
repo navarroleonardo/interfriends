@@ -2,7 +2,7 @@ package com.fatec.interfriends.controller;
 
 import com.fatec.interfriends.domain.dto.phone.PhoneRequestDto;
 import com.fatec.interfriends.domain.dto.phone.PhoneResponseDto;
-import com.fatec.interfriends.domain.model.PhoneModel;
+import com.fatec.interfriends.domain.model.Phone;
 import com.fatec.interfriends.service.phone.PhoneService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +42,7 @@ public class PhoneController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/user/{userId}")
     @Transactional
-    public ResponseEntity<Page<PhoneModel>> getPhoneByUser(@PathVariable(value = "userId") Long userId, Pageable pageable) {
+    public ResponseEntity<Page<Phone>> getPhoneByUser(@PathVariable(value = "userId") Long userId, Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(this.phoneService.getPhoneByUser(userId, pageable));
     }
 

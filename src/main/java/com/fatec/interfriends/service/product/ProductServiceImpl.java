@@ -2,9 +2,9 @@ package com.fatec.interfriends.service.product;
 
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
-import com.fatec.interfriends.domain.model.ProductModel;
-import com.fatec.interfriends.domain.model.ProductSizeModel;
-import com.fatec.interfriends.domain.model.SizeModel;
+import com.fatec.interfriends.domain.model.Product;
+import com.fatec.interfriends.domain.model.ProductSize;
+import com.fatec.interfriends.domain.model.Size;
 import com.fatec.interfriends.repository.ProductCriteriaRepository;
 import com.fatec.interfriends.repository.ProductRepository;
 import com.fatec.interfriends.repository.query.ProductPage;
@@ -37,69 +37,69 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
 
-        ProductModel productModel = new ProductModel(productRequestDto);
-        productModel = this.productRepository.save(productModel);
+        Product product = new Product(productRequestDto);
+        product = this.productRepository.save(product);
 
-        List<SizeModel> sizeModels = this.sizeService.getSizesById(productRequestDto.getSizes());
-        List<ProductSizeModel> productSizeModels = this.productSizeService.bindSizesToProduct(productModel, sizeModels);
+        List<Size> sizes = this.sizeService.getSizesById(productRequestDto.getSizes());
+        List<ProductSize> productSizes = this.productSizeService.bindSizesToProduct(product, sizes);
 
-        return new ProductResponseDto(productModel, productSizeModels);
+        return new ProductResponseDto(product, productSizes);
     }
     
     @Override
     public ProductResponseDto getProduct(Long id) {
-        Optional<ProductModel> productModelOptional = this.productRepository.findById(id);
+        Optional<Product> optionalProduct = this.productRepository.findById(id);
 
-        if (productModelOptional.isEmpty()) {
+        if (optionalProduct.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado.");
         }
 
-        List<ProductSizeModel> productSizeModels = this.productSizeService.getProductSizesByProduct(productModelOptional.get());
+        List<ProductSize> productSizes = this.productSizeService.getProductSizesByProduct(optionalProduct.get());
 
-        return new ProductResponseDto(productModelOptional.get(), productSizeModels);
+        return new ProductResponseDto(optionalProduct.get(), productSizes);
     }
 
     @Override
-    public Page<ProductModel> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {
+    public Page<Product> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {
         return this.productCriteriaRepository.findAllWithFilters(productPage, productSearchCriteria);
     }
 
     @Override
     public ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDto) {
-        Optional<ProductModel> productModelOptional = this.productRepository.findById(id);
+        Optional<Product> optionalProduct = this.productRepository.findById(id);
 
-        if (productModelOptional.isEmpty()) {
+        if (optionalProduct.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado.");
         }
 
-        ProductModel persistentProductModel = productModelOptional.get();
-        ProductModel requestProductModel = new ProductModel(productRequestDto);
+        Product persistentProduct = optionalProduct.get();
+        Product requestProduct = new Product(productRequestDto);
 
-        requestProductModel.setProductId(persistentProductModel.getProductId());
+        requestProduct.setProductId(persistentProduct.getProductId());
 
-        requestProductModel = this.productRepository.save(requestProductModel);
+        requestProduct = this.productRepository.save(requestProduct);
 
-        List<ProductSizeModel> persistentProductSizeModels = this.productSizeService.getProductSizesByProduct(persistentProductModel);
-        List<SizeModel> persistentSizeModels = this.sizeService.getSizesByProductSizes(persistentProductSizeModels);
-        List<SizeModel> requestSizeModels = this.sizeService.getSizesById(productRequestDto.getSizes());
+        List<ProductSize> persistentProductSizes = this.productSizeService.getProductSizesByProduct(persistentProduct);
+        List<Size> persistentSizes = this.sizeService.getSizesByProductSizes(persistentProductSizes);
+        List<Size> requestSizes = this.sizeService.getSizesById(productRequestDto.getSizes());
 
-        List<ProductSizeModel> productSizeModels =  this.productSizeService.updateSizesOfProduct(persistentSizeModels, requestSizeModels, requestProductModel);
+        List<ProductSize> productSizes =  this.productSizeService.updateSizesOfProduct(persistentSizes, requestSizes, requestProduct);
 
-        return new ProductResponseDto(requestProductModel, productSizeModels);
+        return new ProductResponseDto(requestProduct, productSizes);
     }
 
     @Override
     public ProductResponseDto deleteProduct(Long id) {
-        Optional<ProductModel> productModelOptional = this.productRepository.findById(id);
+        Optional<Product> optionalProduct = this.productRepository.findById(id);
 
-        if (productModelOptional.isEmpty()) {
+        if (optionalProduct.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado.");
         }
 
-        List<ProductSizeModel> productSizeModels = this.productSizeService.getProductSizesByProduct(productModelOptional.get());
-        this.productSizeService.deleteByProduct(productModelOptional.get());
-        this.productRepository.delete(productModelOptional.get());
+        List<ProductSize> productSizes = this.productSizeService.getProductSizesByProduct(optionalProduct.get());
+        this.productSizeService.deleteByProduct(optionalProduct.get());
+        this.productRepository.delete(optionalProduct.get());
 
-        return new ProductResponseDto(productModelOptional.get(), productSizeModels);
+        return new ProductResponseDto(optionalProduct.get(), productSizes);
     }
 }

@@ -2,15 +2,15 @@ package com.fatec.interfriends.service.product;
 
 import java.util.List;
 
-import com.fatec.interfriends.domain.model.ProductModel;
-import com.fatec.interfriends.domain.model.ProductSizeModel;
-import com.fatec.interfriends.domain.model.SizeModel;
+import com.fatec.interfriends.domain.model.Product;
+import com.fatec.interfriends.domain.model.ProductSize;
+import com.fatec.interfriends.domain.model.Size;
 
 public interface ProductSizeService {
 
-    List<ProductSizeModel> bindSizesToProduct(ProductModel productModel, List<SizeModel> sizeModels);
-    List<ProductSizeModel> getProductSizesByProduct(ProductModel productModel);
-    List<ProductSizeModel> updateSizesOfProduct(List<SizeModel> persistentProductSizeModels, List<SizeModel> requestSizeModels, ProductModel productModel);
-    void deleteByProduct(ProductModel productModel);
+    List<ProductSize> bindSizesToProduct(Product product, List<Size> sizes);
+    List<ProductSize> getProductSizesByProduct(Product product);
+    List<ProductSize> updateSizesOfProduct(List<Size> persistentProductSizes, List<Size> requestSizes, Product product);
+    void deleteByProduct(Product product);
 
 }

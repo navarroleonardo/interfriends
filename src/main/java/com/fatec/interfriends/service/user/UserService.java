@@ -2,14 +2,14 @@ package com.fatec.interfriends.service.user;
 
 import com.fatec.interfriends.domain.dto.login.LoginRequestDto;
 import com.fatec.interfriends.domain.dto.user.UserRequestDto;
-import com.fatec.interfriends.domain.model.UserModel;
+import com.fatec.interfriends.domain.model.User;
 
 public interface UserService {
 
     String login(LoginRequestDto loginRequestDto);
-    UserModel createUser(UserRequestDto userRequestDto, Boolean isAdmin);
-    UserModel getUser(Long id);
-    UserModel updateUser(Long id, UserRequestDto userRequestDto);
-    UserModel deleteUser(Long id);
+    User createUser(UserRequestDto userRequestDto, Boolean isAdmin);
+    User getUser(Long id);
+    User updateUser(Long id, UserRequestDto userRequestDto);
+    User deleteUser(Long id);
 
 }

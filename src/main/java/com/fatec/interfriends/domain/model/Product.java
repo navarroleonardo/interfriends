@@ -16,7 +16,7 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductModel implements Serializable {
+public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,9 +31,9 @@ public class ProductModel implements Serializable {
     private String description;
 
     @OneToMany
-    private Set<ProductSizeModel> productSizes = new HashSet<>();
+    private Set<ProductSize> productSizes = new HashSet<>();
 
-    public ProductModel(ProductRequestDto productRequestDto) {
+    public Product(ProductRequestDto productRequestDto) {
         BeanUtils.copyProperties(productRequestDto, this);
     }
 
