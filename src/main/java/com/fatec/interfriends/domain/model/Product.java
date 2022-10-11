@@ -33,6 +33,14 @@ public class Product implements Serializable {
     @OneToMany
     private Set<ProductSize> productSizes = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "product_categories",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
+
     public Product(ProductRequestDto productRequestDto) {
         BeanUtils.copyProperties(productRequestDto, this);
     }
