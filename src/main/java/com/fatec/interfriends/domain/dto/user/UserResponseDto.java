@@ -2,7 +2,7 @@ package com.fatec.interfriends.domain.dto.user;
 
 import com.fatec.interfriends.domain.dto.address.AddressResponseDto;
 import com.fatec.interfriends.domain.dto.phone.PhoneResponseDto;
-import com.fatec.interfriends.domain.model.UserModel;
+import com.fatec.interfriends.domain.model.User;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
@@ -19,10 +19,10 @@ public class UserResponseDto {
     private List<AddressResponseDto> addresses = new ArrayList<>();
     private List<PhoneResponseDto> phones = new ArrayList<>();
 
-    public UserResponseDto(UserModel userModel) {
-        BeanUtils.copyProperties(userModel, this);
-        userModel.getAddresses().forEach(addressModel -> this.addresses.add(new AddressResponseDto(addressModel)));
-        userModel.getPhones().forEach(phoneModel -> this.phones.add(new PhoneResponseDto(phoneModel)));
+    public UserResponseDto(User user) {
+        BeanUtils.copyProperties(user, this);
+        user.getAddresses().forEach(address -> this.addresses.add(new AddressResponseDto(address)));
+        user.getPhones().forEach(phone -> this.phones.add(new PhoneResponseDto(phone)));
     }
 
 }

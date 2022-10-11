@@ -1,14 +1,14 @@
 package com.fatec.interfriends.repository;
 
-import com.fatec.interfriends.domain.model.UserModel;
+import com.fatec.interfriends.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserModel, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-	Optional<UserModel> findByEmail(String email);
+	Optional<User> findByEmail(String email);
 
 }

@@ -1,6 +1,6 @@
 package com.fatec.interfriends.repository;
 
-import com.fatec.interfriends.domain.model.ProductModel;
+import com.fatec.interfriends.domain.model.Product;
 import com.fatec.interfriends.repository.query.ProductPage;
 import com.fatec.interfriends.repository.query.ProductSearchCriteria;
 import org.springframework.data.domain.*;
@@ -27,39 +27,39 @@ public class ProductCriteriaRepository {
         this.criteriaBuilder = entityManager.getCriteriaBuilder();
     }
 
-    public Page<ProductModel> findAllWithFilters(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {
-        CriteriaQuery<ProductModel> productModelCriteriaQuery = criteriaBuilder.createQuery(ProductModel.class);
-        Root<ProductModel> productModelRoot = productModelCriteriaQuery.from(ProductModel.class);
+    public Page<Product> findAllWithFilters(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {
+        CriteriaQuery<Product> productCriteriaQuery = criteriaBuilder.createQuery(Product.class);
+        Root<Product> productRoot = productCriteriaQuery.from(Product.class);
 
-        Predicate predicate = getPredicate(productSearchCriteria, productModelRoot);
-        setOrder(productPage, productModelCriteriaQuery, productModelRoot);
+        Predicate predicate = getPredicate(productSearchCriteria, productRoot);
+        setOrder(productPage, productCriteriaQuery, productRoot);
 
-        productModelCriteriaQuery.where(predicate);
+        productCriteriaQuery.where(predicate);
 
-        TypedQuery<ProductModel> productModelTypedQuery = entityManager.createQuery(productModelCriteriaQuery);
+        TypedQuery<Product> productTypedQuery = entityManager.createQuery(productCriteriaQuery);
 
-        productModelTypedQuery.setFirstResult(productPage.getPageNumber() * productPage.getPageSize());
-        productModelTypedQuery.setMaxResults(productPage.getPageSize());
+        productTypedQuery.setFirstResult(productPage.getPageNumber() * productPage.getPageSize());
+        productTypedQuery.setMaxResults(productPage.getPageSize());
 
-        return new PageImpl(productModelTypedQuery.getResultList(), getPageable(productPage), getProductsCount(predicate));
+        return new PageImpl(productTypedQuery.getResultList(), getPageable(productPage), getProductsCount(predicate));
     }
 
-    private Predicate getPredicate(ProductSearchCriteria productSearchCriteria, Root<ProductModel> productModelRoot) {
+    private Predicate getPredicate(ProductSearchCriteria productSearchCriteria, Root<Product> productRoot) {
         List<Predicate> predicateList = new ArrayList();
 
         if (Objects.nonNull(productSearchCriteria.getName())) {
-            predicateList.add(criteriaBuilder.like(productModelRoot.get("name"), "%" + productSearchCriteria.getName() + "%"));
-            predicateList.add(criteriaBuilder.like(productModelRoot.get("description"), "%" + productSearchCriteria.getName() + "%"));
+            predicateList.add(criteriaBuilder.like(productRoot.get("name"), "%" + productSearchCriteria.getName() + "%"));
+            predicateList.add(criteriaBuilder.like(productRoot.get("description"), "%" + productSearchCriteria.getName() + "%"));
         }
 
         return criteriaBuilder.or(predicateList.toArray(new Predicate[0]));
     }
 
-    private void setOrder(ProductPage productPage, CriteriaQuery<ProductModel> productModelCriteriaQuery, Root<ProductModel> productModelRoot) {
+    private void setOrder(ProductPage productPage, CriteriaQuery<Product> productCriteriaQuery, Root<Product> productRoot) {
         if (productPage.getSortDirection().isAscending()) {
-            productModelCriteriaQuery.orderBy(criteriaBuilder.asc(productModelRoot.get(productPage.getSortBy())));
+            productCriteriaQuery.orderBy(criteriaBuilder.asc(productRoot.get(productPage.getSortBy())));
         } else {
-            productModelCriteriaQuery.orderBy(criteriaBuilder.desc(productModelRoot.get(productPage.getSortBy())));
+            productCriteriaQuery.orderBy(criteriaBuilder.desc(productRoot.get(productPage.getSortBy())));
         }
     }
 
@@ -70,7 +70,7 @@ public class ProductCriteriaRepository {
 
     private long getProductsCount(Predicate predicate) {
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<ProductModel> countRoot = countQuery.from(ProductModel.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
         return entityManager.createQuery(countQuery).getSingleResult();
     }

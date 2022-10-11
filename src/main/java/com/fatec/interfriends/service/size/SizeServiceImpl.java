@@ -1,8 +1,8 @@
 package com.fatec.interfriends.service.size;
 
 import com.fatec.interfriends.domain.dto.size.SizeRequestDto;
-import com.fatec.interfriends.domain.model.ProductSizeModel;
-import com.fatec.interfriends.domain.model.SizeModel;
+import com.fatec.interfriends.domain.model.ProductSize;
+import com.fatec.interfriends.domain.model.Size;
 import com.fatec.interfriends.repository.SizeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,25 +21,25 @@ public class SizeServiceImpl implements SizeService {
     }
 
     @Override
-    public SizeModel createSize(SizeRequestDto sizeRequestDto) {
-        SizeModel sizeModel = new SizeModel(sizeRequestDto);
+    public Size createSize(SizeRequestDto sizeRequestDto) {
+        Size size = new Size(sizeRequestDto);
 
-        return this.sizeRepository.save(sizeModel);
+        return this.sizeRepository.save(size);
     }
 
     @Override
-    public SizeModel getSize(Long id) {
-        Optional<SizeModel> sizeModelOptional = this.sizeRepository.findById(id);
+    public Size getSize(Long id) {
+        Optional<Size> optionalSize = this.sizeRepository.findById(id);
 
-        if (sizeModelOptional.isEmpty()) {
+        if (optionalSize.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tamanho não encontrado.");
         }
 
-        return sizeModelOptional.get();
+        return optionalSize.get();
     }
 
     @Override
-    public List<SizeModel> getSizesById(List<Long> sizeIds) {
+    public List<Size> getSizesById(List<Long> sizeIds) {
         return sizeIds.stream()
                 .map(this.sizeRepository::findById)
                 .filter(Optional::isPresent)
@@ -48,36 +48,36 @@ public class SizeServiceImpl implements SizeService {
     }
 
     @Override
-    public List<SizeModel> getSizesByProductSizes(List<ProductSizeModel> productSizeModels) {
-        return productSizeModels.stream()
-                .map(ProductSizeModel::getSize)
+    public List<Size> getSizesByProductSizes(List<ProductSize> productSizes) {
+        return productSizes.stream()
+                .map(ProductSize::getSize)
                 .toList();
     }
 
     @Override
-    public SizeModel updateSize(Long id, SizeRequestDto sizeRequestDto) {
-        Optional<SizeModel> sizeModelOptional = this.sizeRepository.findById(id);
+    public Size updateSize(Long id, SizeRequestDto sizeRequestDto) {
+        Optional<Size> optionalSize = this.sizeRepository.findById(id);
 
-        if (sizeModelOptional.isEmpty()) {
+        if (optionalSize.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tamanho não encontrado.");
         }
 
-        SizeModel sizeModel = new SizeModel(sizeRequestDto);
-        sizeModel.setSizeId(sizeModelOptional.get().getSizeId());
+        Size size = new Size(sizeRequestDto);
+        size.setSizeId(optionalSize.get().getSizeId());
 
-        return this.sizeRepository.save(sizeModel);
+        return this.sizeRepository.save(size);
     }
 
     @Override
-    public SizeModel deleteSize(Long id) {
-        Optional<SizeModel> sizeModelOptional = this.sizeRepository.findById(id);
+    public Size deleteSize(Long id) {
+        Optional<Size> optionalSize = this.sizeRepository.findById(id);
 
-        if (sizeModelOptional.isEmpty()) {
+        if (optionalSize.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tamanho não encontrado.");
         }
 
-        this.sizeRepository.delete(sizeModelOptional.get());
+        this.sizeRepository.delete(optionalSize.get());
 
-        return sizeModelOptional.get();
+        return optionalSize.get();
     }
 }

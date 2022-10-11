@@ -3,16 +3,16 @@ package com.fatec.interfriends.service.size;
 import java.util.List;
 
 import com.fatec.interfriends.domain.dto.size.SizeRequestDto;
-import com.fatec.interfriends.domain.model.ProductSizeModel;
-import com.fatec.interfriends.domain.model.SizeModel;
+import com.fatec.interfriends.domain.model.ProductSize;
+import com.fatec.interfriends.domain.model.Size;
 
 public interface SizeService {
 
-    SizeModel createSize(SizeRequestDto sizeRequestDto);
-    SizeModel getSize(Long id);
-    List<SizeModel> getSizesById(List<Long> sizeIds);
-    List<SizeModel> getSizesByProductSizes(List<ProductSizeModel> productSizeModels);
-    SizeModel updateSize(Long id, SizeRequestDto sizeRequestDto);
-    SizeModel deleteSize(Long id);
+    Size createSize(SizeRequestDto sizeRequestDto);
+    Size getSize(Long id);
+    List<Size> getSizesById(List<Long> sizeIds);
+    List<Size> getSizesByProductSizes(List<ProductSize> productSizes);
+    Size updateSize(Long id, SizeRequestDto sizeRequestDto);
+    Size deleteSize(Long id);
 
 }

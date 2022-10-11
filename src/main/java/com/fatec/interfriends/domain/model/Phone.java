@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "phone")
-public class PhoneModel implements Serializable {
+public class Phone implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,9 +31,9 @@ public class PhoneModel implements Serializable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    private UserModel user;
+    private User user;
 
-    public PhoneModel(PhoneRequestDto phoneRequestDto) {
+    public Phone(PhoneRequestDto phoneRequestDto) {
         BeanUtils.copyProperties(phoneRequestDto, this);
     }
 

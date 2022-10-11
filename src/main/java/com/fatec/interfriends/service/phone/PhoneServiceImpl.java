@@ -1,8 +1,8 @@
 package com.fatec.interfriends.service.phone;
 
 import com.fatec.interfriends.domain.dto.phone.PhoneRequestDto;
-import com.fatec.interfriends.domain.model.PhoneModel;
-import com.fatec.interfriends.domain.model.UserModel;
+import com.fatec.interfriends.domain.model.Phone;
+import com.fatec.interfriends.domain.model.User;
 import com.fatec.interfriends.repository.PhoneRepository;
 import com.fatec.interfriends.service.user.UserService;
 import org.springframework.data.domain.Page;
@@ -25,61 +25,61 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
     @Override
-    public PhoneModel createPhone(PhoneRequestDto phoneRequestDto) {
-        PhoneModel phoneModel = new PhoneModel(phoneRequestDto);
+    public Phone createPhone(PhoneRequestDto phoneRequestDto) {
+        Phone phone = new Phone(phoneRequestDto);
 
-        UserModel userModel = this.userService.getUser(phoneRequestDto.getUserId());
-        phoneModel.setUser(userModel);
+        User user = this.userService.getUser(phoneRequestDto.getUserId());
+        phone.setUser(user);
 
-        return this.phoneRepository.save(phoneModel);
+        return this.phoneRepository.save(phone);
     }
 
     @Override
-    public PhoneModel getPhone(Long phoneId) {
-        Optional<PhoneModel> optionalPhoneModel = this.phoneRepository.findById(phoneId);
+    public Phone getPhone(Long phoneId) {
+        Optional<Phone> optionalPhone = this.phoneRepository.findById(phoneId);
 
-        if (!optionalPhoneModel.isPresent()) {
+        if (!optionalPhone.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Telefone não encontrado.");
         }
 
-        return optionalPhoneModel.get();
+        return optionalPhone.get();
     }
 
     @Override
-    public Page<PhoneModel> getPhoneByUser(Long userId, Pageable pageable) {
-        UserModel userModel = this.userService.getUser(userId);
+    public Page<Phone> getPhoneByUser(Long userId, Pageable pageable) {
+        User user = this.userService.getUser(userId);
 
-        return this.phoneRepository.findAllByUser(userModel, pageable);
+        return this.phoneRepository.findAllByUser(user, pageable);
     }
 
     @Override
-    public PhoneModel updatePhone(Long phoneId, PhoneRequestDto phoneRequestDto) {
-        Optional<PhoneModel> optionalPhoneModel = this.phoneRepository.findById(phoneId);
+    public Phone updatePhone(Long phoneId, PhoneRequestDto phoneRequestDto) {
+        Optional<Phone> optionalPhone = this.phoneRepository.findById(phoneId);
 
-        if (!optionalPhoneModel.isPresent()) {
+        if (!optionalPhone.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Telefone não encontrado.");
         }
 
-        PhoneModel phoneModel = new PhoneModel(phoneRequestDto);
+        Phone phone = new Phone(phoneRequestDto);
 
-        UserModel userModel = this.userService.getUser(phoneRequestDto.getUserId());
-        phoneModel.setUser(userModel);
-        phoneModel.setPhoneId(optionalPhoneModel.get().getPhoneId());
+        User user = this.userService.getUser(phoneRequestDto.getUserId());
+        phone.setUser(user);
+        phone.setPhoneId(optionalPhone.get().getPhoneId());
 
-        return this.phoneRepository.save(phoneModel);
+        return this.phoneRepository.save(phone);
     }
 
     @Override
-    public PhoneModel deletePhone(Long phoneId) {
-        Optional<PhoneModel> optionalPhoneModel = this.phoneRepository.findById(phoneId);
+    public Phone deletePhone(Long phoneId) {
+        Optional<Phone> optionalPhone = this.phoneRepository.findById(phoneId);
 
-        if (!optionalPhoneModel.isPresent()) {
+        if (!optionalPhone.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Telefone não encontrado.");
         }
 
-        this.phoneRepository.delete(optionalPhoneModel.get());
+        this.phoneRepository.delete(optionalPhone.get());
 
-        return optionalPhoneModel.get();
+        return optionalPhone.get();
     }
 
 }

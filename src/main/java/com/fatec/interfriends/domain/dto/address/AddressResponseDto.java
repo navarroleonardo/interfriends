@@ -1,6 +1,6 @@
 package com.fatec.interfriends.domain.dto.address;
 
-import com.fatec.interfriends.domain.model.AddressModel;
+import com.fatec.interfriends.domain.model.Address;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
@@ -13,9 +13,9 @@ public class AddressResponseDto {
     private Integer number;
     private String complement;
 
-    public AddressResponseDto(AddressModel addressModel) {
-        BeanUtils.copyProperties(addressModel, this);
-        this.userId = addressModel.getUser().getUserId();
+    public AddressResponseDto(Address address) {
+        BeanUtils.copyProperties(address, this);
+        this.userId = address.getUser().getUserId();
     }
 
 }

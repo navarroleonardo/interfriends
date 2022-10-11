@@ -1,15 +1,15 @@
 package com.fatec.interfriends.repository;
 
-import com.fatec.interfriends.domain.model.AddressModel;
-import com.fatec.interfriends.domain.model.UserModel;
+import com.fatec.interfriends.domain.model.Address;
+import com.fatec.interfriends.domain.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AddressRepository extends JpaRepository<AddressModel, Long> {
+public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    Page<AddressModel> findAllByUser(UserModel userModel, Pageable pageable);
+    Page<Address> findAllByUser(User user, Pageable pageable);
 
 }

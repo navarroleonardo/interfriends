@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserModel implements Serializable {
+public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,15 +40,15 @@ public class UserModel implements Serializable {
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
-	private List<RoleModel> roles;
+	private List<Role> roles;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<AddressModel> addresses = new ArrayList<>();
+	private List<Address> addresses = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<PhoneModel> phones = new ArrayList<>();
+	private List<Phone> phones = new ArrayList<>();
 
-	public UserModel (UserRequestDto userRequestDto) {
+	public User(UserRequestDto userRequestDto) {
 		BeanUtils.copyProperties(userRequestDto, this);
 	}
 }

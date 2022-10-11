@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Table(name = "product_size")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductSizeModel implements Serializable {
+public class ProductSize implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,22 +22,22 @@ public class ProductSizeModel implements Serializable {
 
     @ManyToOne
     @MapsId("productId")
-    private ProductModel product;
+    private Product product;
 
     @ManyToOne
     @MapsId("sizeId")
-    private SizeModel size;
+    private Size size;
     
     private Long quantity = 0L;
     
-    public ProductSizeModel(ProductModel productModel, SizeModel sizeModel) {
-		this.product = productModel;
-		this.size = sizeModel;
+    public ProductSize(Product product, Size size) {
+		this.product = product;
+		this.size = size;
 	}
     
-    public ProductSizeModel(ProductModel productModel, SizeModel sizeModel, Long quantity) {
-		this.product = productModel;
-		this.size = sizeModel;
+    public ProductSize(Product product, Size size, Long quantity) {
+		this.product = product;
+		this.size = size;
 		this.quantity = quantity;
 	}
 

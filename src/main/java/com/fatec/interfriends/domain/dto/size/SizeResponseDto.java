@@ -1,6 +1,6 @@
 package com.fatec.interfriends.domain.dto.size;
 
-import com.fatec.interfriends.domain.model.SizeModel;
+import com.fatec.interfriends.domain.model.Size;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
@@ -11,8 +11,8 @@ public class SizeResponseDto {
     private String size;
     private String description;
 
-    public SizeResponseDto(SizeModel sizeModel) {
-        BeanUtils.copyProperties(sizeModel, this);
+    public SizeResponseDto(Size size) {
+        BeanUtils.copyProperties(size, this);
     }
 
 }

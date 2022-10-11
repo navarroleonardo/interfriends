@@ -1,6 +1,6 @@
 package com.fatec.interfriends.domain.dto.phone;
 
-import com.fatec.interfriends.domain.model.PhoneModel;
+import com.fatec.interfriends.domain.model.Phone;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
@@ -13,8 +13,8 @@ public class PhoneResponseDto {
     private String ddd;
     private String number;
 
-    public PhoneResponseDto(PhoneModel phoneModel) {
-        BeanUtils.copyProperties(phoneModel, this);
-        this.userId = phoneModel.getUser().getUserId();
+    public PhoneResponseDto(Phone phone) {
+        BeanUtils.copyProperties(phone, this);
+        this.userId = phone.getUser().getUserId();
     }
 }

@@ -6,11 +6,9 @@ import java.util.Optional;
 
 import com.fatec.interfriends.config.security.TokenProvider;
 import com.fatec.interfriends.domain.dto.login.LoginRequestDto;
-import com.fatec.interfriends.domain.dto.login.LoginResponseDto;
 import com.fatec.interfriends.domain.dto.user.UserRequestDto;
-import com.fatec.interfriends.domain.dto.user.UserResponseDto;
 //import com.fatec.interfriends.domain.enums.RoleName;
-import com.fatec.interfriends.domain.model.RoleModel;
+import com.fatec.interfriends.domain.model.Role;
 import com.fatec.interfriends.repository.RoleRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fatec.interfriends.domain.model.UserModel;
+import com.fatec.interfriends.domain.model.User;
 import com.fatec.interfriends.repository.UserRepository;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -55,23 +53,23 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserModel getUser (Long id){
-		Optional<UserModel> userModelOptional = userRepository.findById(id);
+	public User getUser (Long id){
+		Optional<User> optionalUser = userRepository.findById(id);
 
-		if (!userModelOptional.isPresent()) {
+		if (!optionalUser.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
 		}
 
-		return userModelOptional.get();
+		return optionalUser.get();
 	}
 
 	@Override
-	public UserModel createUser(UserRequestDto userRequestDto, Boolean isAdmin) {
-		UserModel newUser = new UserModel(userRequestDto);
+	public User createUser(UserRequestDto userRequestDto, Boolean isAdmin) {
+		User newUser = new User(userRequestDto);
 
-		Optional<UserModel> existingUser = userRepository.findByEmail(newUser.getEmail());
+		Optional<User> optionalUser = userRepository.findByEmail(newUser.getEmail());
 
-		if (existingUser.isPresent()) {
+		if (optionalUser.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O e-mail informado já pertence a um usuário.");
 		}
 
@@ -82,41 +80,41 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserModel updateUser (Long id, UserRequestDto userRequestDto) {
-		Optional<UserModel> userModelOptional = userRepository.findById(id);
+	public User updateUser (Long id, UserRequestDto userRequestDto) {
+		Optional<User> optionalUser = userRepository.findById(id);
 
-		if (!userModelOptional.isPresent()) {
+		if (!optionalUser.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
 		}
 
-		UserModel userModel = new UserModel(userRequestDto);
+		User user = new User(userRequestDto);
 
-		userModel.setUserId(userModelOptional.get().getUserId());
+		user.setUserId(optionalUser.get().getUserId());
 
-		return userRepository.save(userModel);
+		return userRepository.save(user);
 	}
 
 	@Override
-	public UserModel deleteUser (Long id) {
-		Optional<UserModel> userModelOptional = userRepository.findById(id);
+	public User deleteUser (Long id) {
+		Optional<User> optionalUser = userRepository.findById(id);
 
-		if (!userModelOptional.isPresent()) {
+		if (!optionalUser.isPresent()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
 		}
 
-		userRepository.delete(userModelOptional.get());
+		userRepository.delete(optionalUser.get());
 
-		return userModelOptional.get();
+		return optionalUser.get();
 	}
 
-	private void encryptPassword (UserModel userModel) {
-		userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+	private void encryptPassword (User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 	}
 
-	private void addRoles (UserModel userModel, Boolean isAdmin) {
-		List<RoleModel> roles = new ArrayList<>();
+	private void addRoles (User user, Boolean isAdmin) {
+		List<Role> roles = new ArrayList<>();
 
-		Optional<RoleModel> userRole = roleRepository.findRoleByRoleName("ROLE_USER");
+		Optional<Role> userRole = roleRepository.findRoleByRoleName("ROLE_USER");
 		//RoleName.ROLE_USER.toString()
 
 		if (userRole.isEmpty()) {
@@ -126,7 +124,7 @@ public class UserServiceImpl implements UserService {
 		roles.add(userRole.get());
 
 		if (isAdmin) {
-			Optional<RoleModel> adminRole = roleRepository.findRoleByRoleName("ROLE_ADMIN");
+			Optional<Role> adminRole = roleRepository.findRoleByRoleName("ROLE_ADMIN");
 			//RoleName.ROLE_ADMIN.toString()
 
 			if (adminRole.isEmpty()) {
@@ -136,7 +134,7 @@ public class UserServiceImpl implements UserService {
 			roles.add(adminRole.get());
 		}
 
-		userModel.setRoles(roles);
+		user.setRoles(roles);
 	}
 	
 }

@@ -1,6 +1,6 @@
 package com.fatec.interfriends.domain.dto.inventory;
 
-import com.fatec.interfriends.domain.model.ProductSizeModel;
+import com.fatec.interfriends.domain.model.ProductSize;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -15,10 +15,10 @@ public class InventoryResponseDto {
     @NotNull
     private Long quantity;
 
-    public InventoryResponseDto(ProductSizeModel productSizeModel) {
-        this.productId = productSizeModel.getProduct().getProductId();
-        this.sizeId = productSizeModel.getSize().getSizeId();
-        this.quantity = productSizeModel.getQuantity();
+    public InventoryResponseDto(ProductSize productSize) {
+        this.productId = productSize.getProduct().getProductId();
+        this.sizeId = productSize.getSize().getSizeId();
+        this.quantity = productSize.getQuantity();
     }
 
 }
