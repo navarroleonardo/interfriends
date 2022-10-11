@@ -13,6 +13,6 @@ public class ProductRequestDto {
     @NotNull
     private Double price;
     private String description;
-     private List<Long> sizes;
-   
+    private List<Long> sizes;
+    private List<Long> categories;
 }
