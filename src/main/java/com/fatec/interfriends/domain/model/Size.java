@@ -23,7 +23,7 @@ public class Size implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long sizeId;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String size;
     @Column(nullable = true)
     private String description;
