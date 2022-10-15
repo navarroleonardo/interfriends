@@ -1,5 +1,6 @@
 package com.fatec.interfriends.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class ProductSize implements Serializable {
 
     @ManyToOne
     @MapsId("productId")
+    @JsonIgnore
     private Product product;
 
     @ManyToOne

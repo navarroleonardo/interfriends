@@ -13,6 +13,7 @@ import com.fatec.interfriends.repository.query.ProductSearchCriteria;
 import com.fatec.interfriends.service.category.CategoryService;
 import com.fatec.interfriends.service.size.SizeService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,8 +49,9 @@ public class ProductServiceImpl implements ProductService {
 
         List<Size> sizes = this.sizeService.getSizesById(productRequestDto.getSizes());
         List<ProductSize> productSizes = this.productSizeService.bindSizesToProduct(product, sizes);
+        product.setProductSizes(productSizes);
 
-        return new ProductResponseDto(product, productSizes);
+        return new ProductResponseDto(product);
     }
     
     @Override
@@ -60,14 +62,17 @@ public class ProductServiceImpl implements ProductService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado.");
         }
 
-        List<ProductSize> productSizes = this.productSizeService.getProductSizesByProduct(optionalProduct.get());
-
-        return new ProductResponseDto(optionalProduct.get(), productSizes);
+        return new ProductResponseDto(optionalProduct.get());
     }
 
     @Override
     public Page<Product> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {
         return this.productCriteriaRepository.findAllWithFilters(productPage, productSearchCriteria);
+    }
+
+    @Override
+    public Page<Product> searchProducts(Pageable pageable, List<Long> categoriesId, List<Long> sizesId) {
+        return this.productRepository.findDistinctByCategoriesInAndSizesIn(categoriesId, sizesId, pageable);
     }
 
     @Override
@@ -91,8 +96,9 @@ public class ProductServiceImpl implements ProductService {
         List<Size> requestSizes = this.sizeService.getSizesById(productRequestDto.getSizes());
 
         List<ProductSize> productSizes =  this.productSizeService.updateSizesOfProduct(persistentSizes, requestSizes, requestProduct);
+        requestProduct.setProductSizes(productSizes);
 
-        return new ProductResponseDto(requestProduct, productSizes);
+        return new ProductResponseDto(requestProduct);
     }
 
     @Override
@@ -103,11 +109,10 @@ public class ProductServiceImpl implements ProductService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado.");
         }
 
-        List<ProductSize> productSizes = this.productSizeService.getProductSizesByProduct(optionalProduct.get());
         this.productSizeService.deleteByProduct(optionalProduct.get());
         this.productRepository.delete(optionalProduct.get());
 
-        return new ProductResponseDto(optionalProduct.get(), productSizes);
+        return new ProductResponseDto(optionalProduct.get());
     }
 
     private void addCategories(Product product, List<Long> categoriesId) {

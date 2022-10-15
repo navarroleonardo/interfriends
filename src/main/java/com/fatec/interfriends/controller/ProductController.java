@@ -6,7 +6,9 @@ import com.fatec.interfriends.domain.model.Product;
 import com.fatec.interfriends.repository.query.ProductPage;
 import com.fatec.interfriends.repository.query.ProductSearchCriteria;
 import com.fatec.interfriends.service.product.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 
+@Slf4j
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/product")
@@ -42,6 +46,14 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<Page<Product>> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria){
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProducts(productPage, productSearchCriteria));
+}
+    @GetMapping("/search")
+    public ResponseEntity<Page<Product>> searchProducts(
+            Pageable pageable,
+            @RequestParam(value = "categories") List<Long> categoriesId,
+            @RequestParam(value = "sizes") List<Long> sizesId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.productService.searchProducts(pageable, categoriesId, sizesId));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
