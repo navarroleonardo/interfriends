@@ -1,17 +1,17 @@
 package com.fatec.interfriends.service.product;
 
+import com.fatec.interfriends.domain.dto.favorite.FavoriteRequestDto;
+import com.fatec.interfriends.domain.dto.favorite.FavoriteResponseDto;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
-import com.fatec.interfriends.domain.model.Category;
-import com.fatec.interfriends.domain.model.Product;
-import com.fatec.interfriends.domain.model.ProductSize;
-import com.fatec.interfriends.domain.model.Size;
+import com.fatec.interfriends.domain.model.*;
 import com.fatec.interfriends.repository.ProductCriteriaRepository;
 import com.fatec.interfriends.repository.ProductRepository;
 import com.fatec.interfriends.repository.query.ProductPage;
 import com.fatec.interfriends.repository.query.ProductSearchCriteria;
 import com.fatec.interfriends.service.category.CategoryService;
 import com.fatec.interfriends.service.size.SizeService;
+import com.fatec.interfriends.service.user.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -31,13 +31,22 @@ public class ProductServiceImpl implements ProductService {
     private final SizeService sizeService;
     private final ProductSizeService productSizeService;
     private final CategoryService categoryService;
+    private final UserService userService;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductCriteriaRepository productCriteriaRepository, SizeService sizeService, ProductSizeService productSizeService, CategoryService categoryService) {
+    public ProductServiceImpl(
+            ProductRepository productRepository,
+            ProductCriteriaRepository productCriteriaRepository,
+            SizeService sizeService,
+            ProductSizeService productSizeService,
+            CategoryService categoryService,
+            UserService userService
+    ) {
         this.productRepository = productRepository;
         this.productCriteriaRepository = productCriteriaRepository;
         this.sizeService = sizeService;
         this.productSizeService = productSizeService;
         this.categoryService = categoryService;
+        this.userService = userService;
     }
 
     @Override
@@ -113,6 +122,55 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository.delete(optionalProduct.get());
 
         return new ProductResponseDto(optionalProduct.get());
+    }
+
+    @Override
+    public FavoriteResponseDto favoriteProduct(FavoriteRequestDto favoriteRequestDto) {
+        User user = this.userService.getUser(favoriteRequestDto.getUserId());
+
+        Optional<Product> optionalProduct = this.productRepository.findById(favoriteRequestDto.getProductId());
+
+        if (optionalProduct.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado.");
+        }
+
+        if (optionalProduct.get().getFavoritedBy().contains(user)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O usuário já possui o produto na lista de favoritos.");
+        }
+
+        optionalProduct.get().getFavoritedBy().add(user);
+
+        this.productRepository.save(optionalProduct.get());
+
+        return new FavoriteResponseDto(favoriteRequestDto);
+    }
+
+    @Override
+    public Page<Product> getFavoriteProducts(Long userId, Pageable pageable) {
+        User user = this.userService.getUser(userId);
+
+        return this.productRepository.findAllByFavoritedBy(user, pageable);
+    }
+
+    @Override
+    public FavoriteResponseDto disfavorProduct(FavoriteRequestDto favoriteRequestDto) {
+        User user = this.userService.getUser(favoriteRequestDto.getUserId());
+
+        Optional<Product> optionalProduct = this.productRepository.findById(favoriteRequestDto.getProductId());
+
+        if (optionalProduct.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado.");
+        }
+
+        if (!optionalProduct.get().getFavoritedBy().contains(user)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O usuário não possui o produto na lista de favoritos.");
+        }
+
+        optionalProduct.get().getFavoritedBy().remove(user);
+
+        this.productRepository.save(optionalProduct.get());
+
+        return new FavoriteResponseDto(favoriteRequestDto);
     }
 
     private void addCategories(Product product, List<Long> categoriesId) {

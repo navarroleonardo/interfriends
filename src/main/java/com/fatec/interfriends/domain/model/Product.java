@@ -1,5 +1,6 @@
 package com.fatec.interfriends.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 
 import lombok.AllArgsConstructor;
@@ -40,6 +41,15 @@ public class Product implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "users_favorite_products",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnore
+    private List<User> favoritedBy;
 
     public Product(ProductRequestDto productRequestDto) {
         BeanUtils.copyProperties(productRequestDto, this);
