@@ -1,5 +1,7 @@
 package com.fatec.interfriends.controller;
 
+import com.fatec.interfriends.domain.dto.favorite.FavoriteRequestDto;
+import com.fatec.interfriends.domain.dto.favorite.FavoriteResponseDto;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
 import com.fatec.interfriends.domain.model.Product;
@@ -68,6 +70,27 @@ public class ProductController {
     @Transactional
     public ResponseEntity<ProductResponseDto> deleteProduct(@PathVariable(value = "id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.deleteProduct(id));
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/favorite")
+    @Transactional
+    public ResponseEntity<FavoriteResponseDto> favoriteProduct(@Valid @RequestBody FavoriteRequestDto favoriteRequestDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.favoriteProduct(favoriteRequestDto));
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/favorite/{userId}")
+    @Transactional
+    public ResponseEntity<Page<Product>> getFavoriteProducts(@PathVariable(value = "userId") Long userId, Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.getFavoriteProducts(userId, pageable));
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/favorite")
+    @Transactional
+    public ResponseEntity<FavoriteResponseDto> disfavorProduct(@Valid @RequestBody FavoriteRequestDto favoriteRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.productService.disfavorProduct(favoriteRequestDto));
     }
 
 }

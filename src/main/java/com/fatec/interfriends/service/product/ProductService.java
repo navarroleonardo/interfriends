@@ -1,5 +1,7 @@
 package com.fatec.interfriends.service.product;
 
+import com.fatec.interfriends.domain.dto.favorite.FavoriteRequestDto;
+import com.fatec.interfriends.domain.dto.favorite.FavoriteResponseDto;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
 import com.fatec.interfriends.domain.model.Product;
@@ -18,5 +20,8 @@ public interface ProductService {
     Page<Product> searchProducts(Pageable pageable, List<Long> categoriesId, List<Long> sizesId);
     ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDto);
     ProductResponseDto deleteProduct(Long id);
+    FavoriteResponseDto favoriteProduct(FavoriteRequestDto favoriteRequestDto);
+    Page<Product> getFavoriteProducts(Long userId, Pageable pageable);
+    FavoriteResponseDto disfavorProduct(FavoriteRequestDto favoriteRequestDto);
 
 }

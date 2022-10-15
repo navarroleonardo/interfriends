@@ -2,6 +2,7 @@ package com.fatec.interfriends.repository;
 
 import com.fatec.interfriends.domain.model.Product;
 
+import com.fatec.interfriends.domain.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "INNER JOIN product_size ps ON ps.product_product_id = p.product_id " +
             "WHERE pc.category_id IN ?1 AND ps.size_size_id IN ?2", nativeQuery = true)
     Page<Product> findDistinctByCategoriesInAndSizesIn(List<Long> categories, List<Long> sizes, Pageable pageable);
+    Page<Product> findAllByFavoritedBy(User user, Pageable pageable);
 
 }
