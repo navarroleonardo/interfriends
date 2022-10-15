@@ -31,7 +31,7 @@ public class Product implements Serializable {
     private String description;
 
     @OneToMany
-    private Set<ProductSize> productSizes = new HashSet<>();
+    private List<ProductSize> productSizes = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(

@@ -48,8 +48,9 @@ public class ProductServiceImpl implements ProductService {
 
         List<Size> sizes = this.sizeService.getSizesById(productRequestDto.getSizes());
         List<ProductSize> productSizes = this.productSizeService.bindSizesToProduct(product, sizes);
+        product.setProductSizes(productSizes);
 
-        return new ProductResponseDto(product, productSizes);
+        return new ProductResponseDto(product);
     }
     
     @Override
@@ -60,9 +61,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado.");
         }
 
-        List<ProductSize> productSizes = this.productSizeService.getProductSizesByProduct(optionalProduct.get());
-
-        return new ProductResponseDto(optionalProduct.get(), productSizes);
+        return new ProductResponseDto(optionalProduct.get());
     }
 
     @Override
@@ -91,8 +90,9 @@ public class ProductServiceImpl implements ProductService {
         List<Size> requestSizes = this.sizeService.getSizesById(productRequestDto.getSizes());
 
         List<ProductSize> productSizes =  this.productSizeService.updateSizesOfProduct(persistentSizes, requestSizes, requestProduct);
+        requestProduct.setProductSizes(productSizes);
 
-        return new ProductResponseDto(requestProduct, productSizes);
+        return new ProductResponseDto(requestProduct);
     }
 
     @Override
@@ -103,11 +103,10 @@ public class ProductServiceImpl implements ProductService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado.");
         }
 
-        List<ProductSize> productSizes = this.productSizeService.getProductSizesByProduct(optionalProduct.get());
         this.productSizeService.deleteByProduct(optionalProduct.get());
         this.productRepository.delete(optionalProduct.get());
 
-        return new ProductResponseDto(optionalProduct.get(), productSizes);
+        return new ProductResponseDto(optionalProduct.get());
     }
 
     private void addCategories(Product product, List<Long> categoriesId) {
