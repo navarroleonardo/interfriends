@@ -7,5 +7,6 @@ public interface InventoryService {
 
     ProductSize addProductsToInventory(InventoryRequestDto inventoryRequestDto);
     ProductSize removeProductsFromInventory(InventoryRequestDto inventoryRequestDto);
+    void removeProductsFromInventory(ProductSize productSize, Long quantity);
 
 }

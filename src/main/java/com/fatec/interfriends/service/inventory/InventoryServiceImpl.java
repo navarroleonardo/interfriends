@@ -51,4 +51,9 @@ public class InventoryServiceImpl implements InventoryService {
         return this.productSizeRepository.save(productSize);
     }
 
+    public void removeProductsFromInventory(ProductSize productSize, Long quantity) {
+        productSize.setQuantity(productSize.getQuantity() - quantity);
+        this.productSizeRepository.save(productSize);
+    }
+
 }

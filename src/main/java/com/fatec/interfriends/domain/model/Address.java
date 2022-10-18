@@ -9,6 +9,8 @@ import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -32,6 +34,9 @@ public class Address implements Serializable {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
 
     public Address(AddressRequestDto addressRequestDto) {
         BeanUtils.copyProperties(addressRequestDto, this);

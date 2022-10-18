@@ -8,7 +8,6 @@ import com.fatec.interfriends.domain.model.Product;
 import com.fatec.interfriends.repository.query.ProductPage;
 import com.fatec.interfriends.repository.query.ProductSearchCriteria;
 import com.fatec.interfriends.service.product.ProductService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
-@Slf4j
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/product")

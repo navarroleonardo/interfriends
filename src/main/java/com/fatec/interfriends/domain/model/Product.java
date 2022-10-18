@@ -34,13 +34,16 @@ public class Product implements Serializable {
     @OneToMany
     private List<ProductSize> productSizes = new ArrayList<>();
 
+    @OneToMany
+    private List<OrderProduct> orderProducts = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private List<Category> categories;
+    private List<Category> categories = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -49,7 +52,7 @@ public class Product implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     @JsonIgnore
-    private List<User> favoritedBy;
+    private List<User> favoritedBy = new ArrayList<>();
 
     public Product(ProductRequestDto productRequestDto) {
         BeanUtils.copyProperties(productRequestDto, this);
