@@ -22,7 +22,7 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long userId;
 	@Column(nullable = false)
 	private String name;
@@ -47,6 +47,9 @@ public class User implements Serializable {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Phone> phones = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	private List<Order> orders = new ArrayList<>();
 
 	public User(UserRequestDto userRequestDto) {
 		BeanUtils.copyProperties(userRequestDto, this);

@@ -5,9 +5,12 @@ import com.fatec.interfriends.domain.model.ProductSizeId;
 import com.fatec.interfriends.domain.model.ProductSize;
 import com.fatec.interfriends.domain.model.Size;
 import com.fatec.interfriends.repository.ProductSizeRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductSizeServiceImpl implements ProductSizeService {
@@ -44,6 +47,17 @@ public class ProductSizeServiceImpl implements ProductSizeService {
 				.forEach(size -> this.productSizeRepository.deleteById(new ProductSizeId(product.getProductId(), size.getSizeId())));
 
 		return this.getProductSizesByProduct(product);
+	}
+
+	@Override
+	public ProductSize getProductSize(ProductSizeId productSizeId) {
+		Optional<ProductSize> optionalProductSize = this.productSizeRepository.findById(productSizeId);
+
+		if (optionalProductSize.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado no tamanho selecionado.");
+		}
+
+		return optionalProductSize.get();
 	}
 
 }

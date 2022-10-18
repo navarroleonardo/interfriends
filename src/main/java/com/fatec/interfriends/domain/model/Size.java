@@ -9,8 +9,8 @@ import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "size")
@@ -31,7 +31,10 @@ public class Size implements Serializable {
 
     @OneToMany
     @JsonIgnore
-    private Set<ProductSize> productSizes = new HashSet<>();
+    private List<ProductSize> productSizes = new ArrayList<>();
+
+    @OneToMany
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
     public Size(SizeRequestDto sizeRequestDto) {
         BeanUtils.copyProperties(sizeRequestDto, this);
