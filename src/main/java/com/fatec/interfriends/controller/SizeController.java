@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 @RestController
@@ -31,6 +34,13 @@ public class SizeController {
     @GetMapping("/{id}")
     public ResponseEntity<SizeResponseDto> getSize(@PathVariable(value = "id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(new SizeResponseDto(this.sizeService.getSize(id)));
+    }
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping()
+    public ResponseEntity<List<SizeResponseDto>> getSizes() {
+        return ResponseEntity.status(HttpStatus.OK)
+        	   .body(SizeResponseDto.SizesResponseDto(this.sizeService.getAllSizes()));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

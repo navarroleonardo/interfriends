@@ -12,6 +12,7 @@ public interface SizeService {
     Size getSize(Long id);
     List<Size> getSizesById(List<Long> sizeIds);
     List<Size> getSizesByProductSizes(List<ProductSize> productSizes);
+    List<Size> getAllSizes();
     Size updateSize(Long id, SizeRequestDto sizeRequestDto);
     Size deleteSize(Long id);
 

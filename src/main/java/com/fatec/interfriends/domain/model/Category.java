@@ -23,6 +23,7 @@ public class Category implements Serializable {
     private Long categoryId;
     @Column(nullable = false, unique = true)
     private String name;
+    private String description;
 
     public Category(CategoryRequestDto categoryRequestDto) {
         BeanUtils.copyProperties(categoryRequestDto, this);

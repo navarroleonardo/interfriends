@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 public class SizeRequestDto {
 
     @NotNull
-    private String size;
+    private String name;
     private String description;
 
 }
