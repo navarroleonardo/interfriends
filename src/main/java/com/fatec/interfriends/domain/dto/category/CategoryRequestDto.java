@@ -9,5 +9,7 @@ public class CategoryRequestDto {
 
     @NotNull
     private String name;
+    @NotNull
+    private String description;
 
 }

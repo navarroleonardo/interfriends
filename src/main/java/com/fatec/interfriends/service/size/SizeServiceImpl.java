@@ -80,4 +80,9 @@ public class SizeServiceImpl implements SizeService {
 
         return optionalSize.get();
     }
+
+	@Override
+	public List<Size> getAllSizes() {
+		return this.sizeRepository.findAll();
+	}
 }

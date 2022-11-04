@@ -34,6 +34,7 @@ public class ProductController {
     @PostMapping
     @Transactional
     public ResponseEntity<ProductResponseDto> createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+    	
         return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.createProduct(productRequestDto));
     }
 
@@ -45,7 +46,8 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Page<Product>> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria){
-        return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProducts(productPage, productSearchCriteria));
+    	System.out.println("here");
+    	return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProducts(productPage, productSearchCriteria));
 }
     @GetMapping("/search")
     public ResponseEntity<Page<Product>> searchProducts(
