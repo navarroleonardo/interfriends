@@ -17,6 +17,7 @@ public class ProductResponseDto {
     private String description;
     private List<ProductSizeResponseDto> sizes = new ArrayList<>();
     private List<CategoryResponseDto> categories = new ArrayList<>();
+    private byte[] image;
 
     public ProductResponseDto(Product product) {
         BeanUtils.copyProperties(product, this);

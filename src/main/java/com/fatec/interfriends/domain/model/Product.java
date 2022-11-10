@@ -30,6 +30,9 @@ public class Product implements Serializable {
     private Double price;
     @Column(nullable = true)
     private String description;
+    @Column(nullable = true)
+    private byte[] image;
+    
 
     @OneToMany
     private List<ProductSize> productSizes = new ArrayList<>();

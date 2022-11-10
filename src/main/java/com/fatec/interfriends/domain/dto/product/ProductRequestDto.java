@@ -3,6 +3,9 @@ package com.fatec.interfriends.domain.dto.product;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @Data
@@ -15,4 +18,5 @@ public class ProductRequestDto {
     private String description;
     private List<Long> sizes;
     private List<Long> categories;
+    private byte[] image;
 }
