@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -27,6 +28,14 @@ public class CouponController {
     @Transactional
     public ResponseEntity<CouponResponseDto> createCoupon(@RequestBody @Valid CouponRequestDto couponRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(new CouponResponseDto(this.couponService.createCoupon(couponRequestDto)));
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/{userId}")
+    @Transactional
+    public ResponseEntity<List<CouponResponseDto>> getCouponsByUser(@PathVariable(value = "userId") Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.couponService.getCouponsByUser(userId).stream().map(CouponResponseDto::new).toList()
+        );
     }
 
 }

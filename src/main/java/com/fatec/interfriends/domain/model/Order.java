@@ -1,5 +1,6 @@
 package com.fatec.interfriends.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,10 +34,17 @@ public class Order implements Serializable {
     @Column(nullable = true)
     private Double totalPrice;
 
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    private Coupon coupon;
+
     public void calculateTotalPrice() {
         double totalPrice = 0.0;
         for (OrderProduct orderProduct : this.getOrderProducts()) {
             totalPrice = totalPrice + orderProduct.getPrice();
+        }
+        if (this.coupon != null) {
+            totalPrice = totalPrice * (1 - coupon.getSavingsPercentage());
         }
         this.totalPrice = totalPrice;
     }
