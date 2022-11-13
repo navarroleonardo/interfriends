@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 @RestController
@@ -31,6 +33,13 @@ public class CategoryController {
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryResponseDto> getCategory(@PathVariable(value = "categoryId") Long categoryId) {
         return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponseDto(this.categoryService.getCategory(categoryId)));
+    }
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping()
+    public ResponseEntity<List<CategoryResponseDto>> getCategories() {
+        return ResponseEntity.status(HttpStatus.OK)
+        	   .body(CategoryResponseDto.CategoriesResponseDto(this.categoryService.getAllCategories()));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

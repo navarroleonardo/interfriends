@@ -11,12 +11,16 @@ import com.fatec.interfriends.service.product.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -33,9 +37,21 @@ public class ProductController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     @Transactional
-    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody @Valid ProductRequestDto productRequestDto){	
         return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.createProduct(productRequestDto));
     }
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping(value="/foto", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Transactional
+    public ResponseEntity<ProductResponseDto> addImage(
+    		@RequestPart("file") MultipartFile[] file,
+    		@RequestPart("product") @Valid ProductRequestDto productRequestDto) throws IOException{	
+    	productRequestDto.setImage(file[0].getBytes());
+        return ResponseEntity.status(HttpStatus.OK).body(this.productService.createProduct(productRequestDto));
+    }
+    
+    
 
     @GetMapping("/{id}")
     @Transactional
@@ -45,8 +61,8 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Page<Product>> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria){
-        return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProducts(productPage, productSearchCriteria));
-}
+    	return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProducts(productPage, productSearchCriteria));
+    }
     @GetMapping("/search")
     public ResponseEntity<Page<Product>> searchProducts(
             Pageable pageable,

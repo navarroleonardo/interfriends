@@ -13,6 +13,10 @@ spring:
       hibernate:
         dialect: "org.hibernate.dialect.MySQL8Dialect"
 
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
 logging:
     level:
       org:
@@ -25,7 +29,7 @@ logging:
 
 jwt:
   token:
-    validity: 7200
+    validity: 18000
     prefix: "Bearer "
   signing:
     key: "poucasideias"
