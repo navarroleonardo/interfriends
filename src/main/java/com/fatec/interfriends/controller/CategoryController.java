@@ -2,7 +2,6 @@ package com.fatec.interfriends.controller;
 
 import com.fatec.interfriends.domain.dto.category.CategoryRequestDto;
 import com.fatec.interfriends.domain.dto.category.CategoryResponseDto;
-import com.fatec.interfriends.domain.dto.size.SizeResponseDto;
 import com.fatec.interfriends.service.category.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -6,6 +6,7 @@ import com.fatec.interfriends.domain.model.*;
 import com.fatec.interfriends.repository.OrderProductRepository;
 import com.fatec.interfriends.repository.OrderRepository;
 import com.fatec.interfriends.service.address.AddressService;
+import com.fatec.interfriends.service.coupon.CouponService;
 import com.fatec.interfriends.service.inventory.InventoryService;
 import com.fatec.interfriends.service.product.ProductSizeService;
 import com.fatec.interfriends.service.user.UserService;
@@ -25,6 +26,7 @@ public class OrderServiceImpl implements OrderService {
     private final AddressService addressService;
     private final ProductSizeService productSizeService;
     private final InventoryService inventoryService;
+    private final CouponService couponService;
 
     public OrderServiceImpl (
             OrderRepository orderRepository,
@@ -32,7 +34,8 @@ public class OrderServiceImpl implements OrderService {
             UserService userService,
             AddressService addressService,
             ProductSizeService productSizeService,
-            InventoryService inventoryService
+            InventoryService inventoryService,
+            CouponService couponService
     ) {
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
@@ -40,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
         this.addressService = addressService;
         this.productSizeService = productSizeService;
         this.inventoryService = inventoryService;
+        this.couponService = couponService;
     }
 
     @Override
@@ -49,12 +53,13 @@ public class OrderServiceImpl implements OrderService {
         checkProductAvailability(orderRequestDto.getOrderProducts());
 
         assignAddressAndUserToOrder(order, orderRequestDto);
-        this.orderRepository.save(order);
-
+        assignCouponToOrder(order, orderRequestDto);
         debitProductsFromInventory(order, orderRequestDto.getOrderProducts());
 
         order.calculateTotalPrice();
         this.orderRepository.save(order);
+
+        invalidateCoupon(order.getCoupon());
 
         return order;
     }
@@ -105,5 +110,32 @@ public class OrderServiceImpl implements OrderService {
             product.getOrderProducts().add(orderProduct);
             size.getOrderProducts().add(orderProduct);
         });
+    }
+
+    private void assignCouponToOrder(Order order, OrderRequestDto orderRequestDto) {
+        if (orderRequestDto.getCouponId() == null) return;
+
+        Coupon coupon = this.couponService.getCoupon(orderRequestDto.getCouponId());
+
+        if (!coupon.getValid()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O cupom selecionado é invalido.");
+        }
+
+        if (!(coupon.getUser().getUserId() == order.getUser().getUserId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O cupom selecionado não pertence ao usuário selecionado");
+        }
+
+        coupon = this.couponService.validateExpirationDate(coupon);
+
+        if (!coupon.getValid()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O cupom selecionado está expirado.");
+        }
+
+        order.setCoupon(coupon);
+    }
+
+    private void invalidateCoupon(Coupon coupon) {
+        if (coupon == null) return;
+        this.couponService.invalidateCoupon(coupon);
     }
 }
