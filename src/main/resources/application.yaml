@@ -2,6 +2,7 @@ spring:
   datasource:
     url: "jdbc:mysql://localhost:3306/interfriends"
     username: "root"
+    password: "liroot1287"
     testeWhileIdle: "true"
     validationQuery: "SELECT 1"
     driver-class-name: "com.mysql.cj.jdbc.Driver"

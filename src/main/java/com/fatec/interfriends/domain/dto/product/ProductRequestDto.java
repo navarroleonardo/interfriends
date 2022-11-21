@@ -1,7 +1,6 @@
 package com.fatec.interfriends.domain.dto.product;
 
 import lombok.Data;
-
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -13,7 +12,8 @@ public class ProductRequestDto {
     @NotNull
     private Double price;
     private String description;
-    private List<Long> sizes;
+    private Long size;
     private List<Long> categories;
     private byte[] image;
+    private Long quantity;
 }

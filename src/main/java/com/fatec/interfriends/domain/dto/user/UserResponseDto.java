@@ -16,6 +16,7 @@ public class UserResponseDto {
     private String name;
     private String email;
     private String birthdate;
+    private String cpf;
     private List<AddressResponseDto> addresses = new ArrayList<>();
     private List<PhoneResponseDto> phones = new ArrayList<>();
 

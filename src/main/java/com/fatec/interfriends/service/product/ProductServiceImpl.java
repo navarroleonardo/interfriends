@@ -51,13 +51,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
-
         Product product = new Product(productRequestDto);
         addCategories(product, productRequestDto.getCategories());
         product = this.productRepository.save(product);
-
-        List<Size> sizes = this.sizeService.getSizesById(productRequestDto.getSizes());
-        List<ProductSize> productSizes = this.productSizeService.bindSizesToProduct(product, sizes);
+        Size size = this.sizeService.getSize(productRequestDto.getSize());
+        Long quantity = productRequestDto.getQuantity();
+        List<ProductSize> productSizes = this.productSizeService.bindSizeToProduct(product, size, quantity);
         product.setProductSizes(productSizes);
 
         return new ProductResponseDto(product);
@@ -102,9 +101,9 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductSize> persistentProductSizes = this.productSizeService.getProductSizesByProduct(persistentProduct);
         List<Size> persistentSizes = this.sizeService.getSizesByProductSizes(persistentProductSizes);
-        List<Size> requestSizes = this.sizeService.getSizesById(productRequestDto.getSizes());
+        Size requestSize = this.sizeService.getSize(productRequestDto.getSize());
 
-        List<ProductSize> productSizes =  this.productSizeService.updateSizesOfProduct(persistentSizes, requestSizes, requestProduct);
+        List<ProductSize> productSizes =  this.productSizeService.updateSizesOfProduct(persistentSizes, requestSize, requestProduct);
         requestProduct.setProductSizes(productSizes);
 
         return new ProductResponseDto(requestProduct);

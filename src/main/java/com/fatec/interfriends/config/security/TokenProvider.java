@@ -1,6 +1,8 @@
 package com.fatec.interfriends.config.security;
 
 import io.jsonwebtoken.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,6 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import com.fatec.interfriends.domain.model.User;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -18,7 +22,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider implements Serializable {
-
+	
+	@Autowired
+	UserDetailsServiceImpl userService;
+	
+	
+	
     @Value("${jwt.token.validity}")
     public long TOKEN_VALIDITY;
 
@@ -54,11 +63,12 @@ public class TokenProvider implements Serializable {
     }
 
     public String generateToken(Authentication authentication) {
+    	User user = userService.findUserByEmail(authentication.getName());
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-
         return Jwts.builder()
+        		.setId(user.getUserId().toString())
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .setIssuedAt(new Date(System.currentTimeMillis()))

@@ -28,6 +28,8 @@ public class User implements Serializable {
 	private String name;
 	@Column(nullable = false, unique = true)
 	private String email;
+	@Column(nullable = true)
+	private String cpf;
 	@Column(nullable = false)
 	@JsonIgnore
 	private String password;

@@ -47,6 +47,9 @@ public class ProductController {
     public ResponseEntity<ProductResponseDto> addImage(
     		@RequestPart("file") MultipartFile[] file,
     		@RequestPart("product") @Valid ProductRequestDto productRequestDto) throws IOException{	
+    	if(!file[0].isEmpty()) {
+    		productRequestDto.setImage(file[0].getBytes());
+    	}
     	productRequestDto.setImage(file[0].getBytes());
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.createProduct(productRequestDto));
     }

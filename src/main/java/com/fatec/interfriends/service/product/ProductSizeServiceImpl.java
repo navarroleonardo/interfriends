@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,12 @@ public class ProductSizeServiceImpl implements ProductSizeService {
 		return sizes.stream()
 				.map(size -> this.productSizeRepository.save(new ProductSize(product, size)))
 				.toList();
+	}
+	
+	public List<ProductSize> bindSizeToProduct(Product product, Size size, Long quantity) {
+		List<ProductSize> productSizes = new ArrayList<ProductSize>();
+		productSizes.add(this.productSizeRepository.save(new ProductSize(product, size, quantity)));
+		return productSizes;
 	}
 
 	@Override
@@ -58,6 +65,13 @@ public class ProductSizeServiceImpl implements ProductSizeService {
 		}
 
 		return optionalProductSize.get();
+	}
+
+	@Override
+	public List<ProductSize> updateSizesOfProduct(List<Size> persistentProductSizes, Size requestSizes,
+			Product product) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
