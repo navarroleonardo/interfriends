@@ -1,8 +1,6 @@
 package com.fatec.interfriends.domain.dto.category;
 
-import com.fatec.interfriends.domain.dto.size.SizeResponseDto;
 import com.fatec.interfriends.domain.model.Category;
-import com.fatec.interfriends.domain.model.Size;
 
 import lombok.Data;
 

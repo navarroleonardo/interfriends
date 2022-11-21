@@ -50,6 +50,7 @@ public class ProductController {
     	if(!file[0].isEmpty()) {
     		productRequestDto.setImage(file[0].getBytes());
     	}
+    	productRequestDto.setImage(file[0].getBytes());
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.createProduct(productRequestDto));
     }
     
@@ -63,9 +64,8 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Page<Product>> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria){
-    	System.out.println("here");
     	return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProducts(productPage, productSearchCriteria));
-}
+    }
     @GetMapping("/search")
     public ResponseEntity<Page<Product>> searchProducts(
             Pageable pageable,

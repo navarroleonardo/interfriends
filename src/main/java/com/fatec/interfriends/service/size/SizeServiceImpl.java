@@ -30,7 +30,6 @@ public class SizeServiceImpl implements SizeService {
     @Override
     public Size getSize(Long id) {
         Optional<Size> optionalSize = this.sizeRepository.findById(id);
-
         if (optionalSize.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tamanho não encontrado.");
         }

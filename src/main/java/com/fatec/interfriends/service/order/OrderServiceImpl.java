@@ -3,9 +3,13 @@ package com.fatec.interfriends.service.order;
 import com.fatec.interfriends.domain.dto.order.OrderProductRequestDto;
 import com.fatec.interfriends.domain.dto.order.OrderRequestDto;
 import com.fatec.interfriends.domain.model.*;
+import com.fatec.interfriends.domain.model.Address;
+import com.fatec.interfriends.gateway.client.PagSeguroClient;
+import com.fatec.interfriends.gateway.client.dto.charge.*;
 import com.fatec.interfriends.repository.OrderProductRepository;
 import com.fatec.interfriends.repository.OrderRepository;
 import com.fatec.interfriends.service.address.AddressService;
+import com.fatec.interfriends.service.coupon.CouponService;
 import com.fatec.interfriends.service.inventory.InventoryService;
 import com.fatec.interfriends.service.product.ProductSizeService;
 import com.fatec.interfriends.service.user.UserService;
@@ -15,9 +19,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    private final String pagSeguroToken = "B76F0EDB934640D1BAE000F8246CB8C1";
 
     private final OrderRepository orderRepository;
     private final OrderProductRepository orderProductRepository;
@@ -25,6 +32,8 @@ public class OrderServiceImpl implements OrderService {
     private final AddressService addressService;
     private final ProductSizeService productSizeService;
     private final InventoryService inventoryService;
+    private final CouponService couponService;
+    private final PagSeguroClient pagSeguroClient;
 
     public OrderServiceImpl (
             OrderRepository orderRepository,
@@ -32,7 +41,9 @@ public class OrderServiceImpl implements OrderService {
             UserService userService,
             AddressService addressService,
             ProductSizeService productSizeService,
-            InventoryService inventoryService
+            InventoryService inventoryService,
+            CouponService couponService,
+            PagSeguroClient pagSeguroClient
     ) {
         this.orderRepository = orderRepository;
         this.orderProductRepository = orderProductRepository;
@@ -40,6 +51,8 @@ public class OrderServiceImpl implements OrderService {
         this.addressService = addressService;
         this.productSizeService = productSizeService;
         this.inventoryService = inventoryService;
+        this.couponService = couponService;
+        this.pagSeguroClient = pagSeguroClient;
     }
 
     @Override
@@ -49,14 +62,83 @@ public class OrderServiceImpl implements OrderService {
         checkProductAvailability(orderRequestDto.getOrderProducts());
 
         assignAddressAndUserToOrder(order, orderRequestDto);
-        this.orderRepository.save(order);
-
+        assignCouponToOrder(order, orderRequestDto);
         debitProductsFromInventory(order, orderRequestDto.getOrderProducts());
 
         order.calculateTotalPrice();
+        this.createCharges(order, orderRequestDto);
         this.orderRepository.save(order);
 
+        invalidateCoupon(order.getCoupon());
+
         return order;
+    }
+
+    private void createCreditCardPaymentMethod(PaymentMethod paymentMethod, OrderRequestDto orderRequestDto, Order order) {
+        paymentMethod.setType(orderRequestDto.getPayment().getType());
+        paymentMethod.setInstallments(orderRequestDto.getPayment().getInstallments());
+
+        Card card = new Card(orderRequestDto.getPayment().getCard(), new Holder(order.getUser().getName()));
+        paymentMethod.setCard(card);
+        paymentMethod.setCapture(true);
+    }
+
+    private void createDebitCardPaymentMethod(PaymentMethod paymentMethod, OrderRequestDto orderRequestDto, Order order) {
+
+        paymentMethod.setType(orderRequestDto.getPayment().getType());
+
+        AuthenticationMethod authenticationMethod = new AuthenticationMethod(
+                "THREEDS",
+                "BwABBylVaQAAAAFwllVpAAAAAAA=",
+                "BwABBylVaQAAAAFwllVpAAAAAAA=",
+                "05",
+                "2.1.0",
+                "DIR_SERVER_TID"
+        );
+        paymentMethod.setAuthenticationMethod(authenticationMethod);
+
+        Card card = new Card(orderRequestDto.getPayment().getCard(), new Holder(order.getUser().getName()));
+        paymentMethod.setCard(card);
+
+    }
+
+    private void createBoletoPaymentMethod(PaymentMethod paymentMethod, OrderRequestDto orderRequestDto, Order order) {
+
+        User user = order.getUser();
+
+        String dueDate = orderRequestDto.getPayment().getBoleto().getDueDate();
+        Holder holder = new Holder(user.getName(), "43200227850", user.getEmail());
+
+        Boleto boleto = new Boleto(dueDate, holder);
+
+        paymentMethod.setType(orderRequestDto.getPayment().getType());
+        paymentMethod.setBoleto(boleto);
+
+    }
+
+    private void createCharges(Order order, OrderRequestDto orderRequestDto) {
+        // TODO: ADICIONAR ROTA PARA NOTIFICAÇÃO
+        // String notificationUrls = "https://google.com";
+
+        String referenceId = UUID.randomUUID().toString();
+        Amount amount = new Amount(Integer.parseInt(String.valueOf(order.getTotalPrice()).replace(".", "")));
+
+        PaymentMethod paymentMethod = new PaymentMethod();
+
+        switch (orderRequestDto.getPayment().getType()) {
+            case CREDIT_CARD -> createCreditCardPaymentMethod(paymentMethod, orderRequestDto, order);
+            case DEBIT_CARD -> createDebitCardPaymentMethod(paymentMethod, orderRequestDto, order);
+            case BOLETO -> createBoletoPaymentMethod(paymentMethod, orderRequestDto, order);
+        }
+
+        CreateChargeRequestDto createChargeRequestDto = new CreateChargeRequestDto(
+                referenceId,
+                amount,
+                paymentMethod
+        );
+
+        this.pagSeguroClient.createCharges(pagSeguroToken, createChargeRequestDto);
+
     }
 
     @Override
@@ -105,5 +187,32 @@ public class OrderServiceImpl implements OrderService {
             product.getOrderProducts().add(orderProduct);
             size.getOrderProducts().add(orderProduct);
         });
+    }
+
+    private void assignCouponToOrder(Order order, OrderRequestDto orderRequestDto) {
+        if (orderRequestDto.getCouponId() == null) return;
+
+        Coupon coupon = this.couponService.getCoupon(orderRequestDto.getCouponId());
+
+        if (!coupon.getValid()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O cupom selecionado é invalido.");
+        }
+
+        if (!(coupon.getUser().getUserId() == order.getUser().getUserId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O cupom selecionado não pertence ao usuário selecionado");
+        }
+
+        coupon = this.couponService.validateExpirationDate(coupon);
+
+        if (!coupon.getValid()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O cupom selecionado está expirado.");
+        }
+
+        order.setCoupon(coupon);
+    }
+
+    private void invalidateCoupon(Coupon coupon) {
+        if (coupon == null) return;
+        this.couponService.invalidateCoupon(coupon);
     }
 }
