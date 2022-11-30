@@ -30,7 +30,7 @@ public class Product implements Serializable {
     private Double price;
     @Column(nullable = true)
     private String description;
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "LONGBLOB")
     private byte[] image;
     
 

@@ -32,7 +32,7 @@ public class PhoneController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new PhoneResponseDto(this.phoneService.createPhone(phoneRequestDto)));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{phoneId}")
     @Transactional
     public ResponseEntity<PhoneResponseDto> getPhone(@PathVariable(value = "phoneId") Long phoneId) {

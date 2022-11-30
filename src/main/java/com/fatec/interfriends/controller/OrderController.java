@@ -22,7 +22,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<OrderResponseDto> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(new OrderResponseDto(this.orderService.createOrder(orderRequestDto)));

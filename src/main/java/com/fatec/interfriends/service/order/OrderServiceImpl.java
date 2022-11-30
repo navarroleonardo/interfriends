@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -121,7 +122,10 @@ public class OrderServiceImpl implements OrderService {
         // String notificationUrls = "https://google.com";
 
         String referenceId = UUID.randomUUID().toString();
-        Amount amount = new Amount(Integer.parseInt(String.valueOf(order.getTotalPrice()).replace(".", "")));
+        Integer length = String.valueOf(order.getTotalPrice()).split(Pattern.quote("."))[1].length();
+        Integer intTotalPrice = Integer.parseInt(String.valueOf(order.getTotalPrice()).replace(".", ""));
+        intTotalPrice = length == 1 ? intTotalPrice * 10 : intTotalPrice;
+        Amount amount = new Amount(intTotalPrice);
 
         PaymentMethod paymentMethod = new PaymentMethod();
 

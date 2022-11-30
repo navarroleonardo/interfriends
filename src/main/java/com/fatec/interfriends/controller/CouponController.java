@@ -30,7 +30,7 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new CouponResponseDto(this.couponService.createCoupon(couponRequestDto)));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
     @GetMapping("/{userId}")
     @Transactional
     public ResponseEntity<List<CouponResponseDto>> getCouponsByUser(@PathVariable(value = "userId") Long userId) {
