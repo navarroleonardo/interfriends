@@ -34,8 +34,6 @@ public class ProductSizeServiceImpl implements ProductSizeService {
 		List<SizeQuantity> sizesQuantity =  productSizes.stream()
 					.map(productSize -> new SizeQuantity(this.sizeService.getSize(productSize.getSizeId()),  productSize.getQuantity()))
 					.toList();
-		System.out.println(sizesQuantity.get(0).getSize());
-		System.out.println(sizesQuantity.get(0).getQuantity());
 		return sizesQuantity.stream()
 				.map(size -> 
 					this.productSizeRepository.save(new ProductSize(product, size.getSize(), size.getQuantity()))
