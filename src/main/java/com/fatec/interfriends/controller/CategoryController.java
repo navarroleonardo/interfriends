@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 @RestController
@@ -35,14 +36,14 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponseDto(this.categoryService.getCategory(categoryId)));
     }
     
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RolesAllowed("ROLE_ADMIN")
     @GetMapping()
     public ResponseEntity<List<CategoryResponseDto>> getCategories() {
         return ResponseEntity.status(HttpStatus.OK)
         	   .body(CategoryResponseDto.CategoriesResponseDto(this.categoryService.getAllCategories()));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("ROLE_ADMIN")
     @PutMapping("/{categoryId}")
     public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable(value = "categoryId") Long categoryId, @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponseDto(this.categoryService.updateCategory(categoryId, categoryRequestDto)));

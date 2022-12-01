@@ -11,5 +11,6 @@ public interface UserService {
     User getUser(Long id);
     User updateUser(Long id, UserRequestDto userRequestDto);
     User deleteUser(Long id);
+    User findByCpf(String cpf);
 
 }

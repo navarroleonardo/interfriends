@@ -36,7 +36,7 @@ public class Product implements Serializable {
 
     @OneToMany
     private List<ProductSize> productSizes = new ArrayList<>();
-
+    
     @OneToMany
     private List<OrderProduct> orderProducts = new ArrayList<>();
 

@@ -4,6 +4,8 @@ import com.fatec.interfriends.domain.dto.favorite.FavoriteRequestDto;
 import com.fatec.interfriends.domain.dto.favorite.FavoriteResponseDto;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 import com.fatec.interfriends.domain.dto.product.ProductResponseDto;
+import com.fatec.interfriends.domain.dto.product.ProductSizeRequestDto;
+import com.fatec.interfriends.domain.dto.size.SizeQuantity;
 import com.fatec.interfriends.domain.model.*;
 import com.fatec.interfriends.repository.ProductCriteriaRepository;
 import com.fatec.interfriends.repository.ProductRepository;
@@ -54,11 +56,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product(productRequestDto);
         addCategories(product, productRequestDto.getCategories());
         product = this.productRepository.save(product);
-        Size size = this.sizeService.getSize(productRequestDto.getSize());
-        Long quantity = productRequestDto.getQuantity();
-        List<ProductSize> productSizes = this.productSizeService.bindSizeToProduct(product, size, quantity);
+        List<ProductSizeRequestDto> productSizesdto = productRequestDto.getSizeQuantity();
+        List<ProductSize> productSizes = this.productSizeService.bindSizesToProduct(product, productSizesdto);
         product.setProductSizes(productSizes);
-
         return new ProductResponseDto(product);
     }
     
@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {
+    public Page<Product> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {  	
         return this.productCriteriaRepository.findAllWithFilters(productPage, productSearchCriteria);
     }
 
@@ -100,10 +100,9 @@ public class ProductServiceImpl implements ProductService {
         requestProduct = this.productRepository.save(requestProduct);
 
         List<ProductSize> persistentProductSizes = this.productSizeService.getProductSizesByProduct(persistentProduct);
-        List<Size> persistentSizes = this.sizeService.getSizesByProductSizes(persistentProductSizes);
-        Size requestSize = this.sizeService.getSize(productRequestDto.getSize());
-
-        List<ProductSize> productSizes =  this.productSizeService.updateSizesOfProduct(persistentSizes, requestSize, requestProduct);
+        List<SizeQuantity> sizesQuantity = productRequestDto.getSizeQuantity().stream().map(productSize -> new SizeQuantity(this.sizeService.getSize(productSize.getSizeId()), productSize.getQuantity())).toList();		
+        			
+        List<ProductSize> productSizes =  this.productSizeService.updateSizesOfProduct(sizesQuantity, requestProduct);
         requestProduct.setProductSizes(productSizes);
 
         return new ProductResponseDto(requestProduct);
@@ -177,4 +176,6 @@ public class ProductServiceImpl implements ProductService {
         categoriesId.forEach(categoryId -> categories.add(this.categoryService.getCategory(categoryId)));
         product.setCategories(categories);
     }
+    
+
 }

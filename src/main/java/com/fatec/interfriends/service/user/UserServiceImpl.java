@@ -87,10 +87,13 @@ public class UserServiceImpl implements UserService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
 		}
 
-		User user = new User(userRequestDto);
-
-		user.setUserId(optionalUser.get().getUserId());
-
+		User user = optionalUser.get(); 
+		user.setName(userRequestDto.getName());
+		user.setEmail(userRequestDto.getEmail());
+		if(userRequestDto.getPassword() == null) {
+			user.setPassword(user.getPassword());
+		}
+		user.setBirthdate(userRequestDto.getBirthdate());
 		return userRepository.save(user);
 	}
 
@@ -135,6 +138,12 @@ public class UserServiceImpl implements UserService {
 		}
 
 		user.setRoles(roles);
+	}
+
+	@Override
+	public User findByCpf(String cpf) {
+		User user = this.userRepository.findByCpf(cpf).get();
+		return user;
 	}
 	
 }
