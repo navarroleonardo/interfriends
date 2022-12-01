@@ -110,8 +110,6 @@ public class ProductController {
     @DeleteMapping("/favorite")
     @Transactional
     public ResponseEntity<FavoriteResponseDto> disfavorProduct(@Valid @RequestBody FavoriteRequestDto favoriteRequestDto) {
-    	System.out.println(favoriteRequestDto.getProductId());
-    	System.out.println(favoriteRequestDto.getUserId());
     	return ResponseEntity.status(HttpStatus.OK).body(this.productService.disfavorProduct(favoriteRequestDto));
 
     }
