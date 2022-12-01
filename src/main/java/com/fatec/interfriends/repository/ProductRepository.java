@@ -17,8 +17,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT DISTINCT p.* FROM product p " +
             "INNER JOIN product_categories pc ON pc.product_id = p.product_id " +
             "INNER JOIN product_size ps ON ps.product_product_id = p.product_id " +
-            "WHERE pc.category_id IN ?1 AND ps.size_size_id IN ?2", nativeQuery = true)
-    Page<Product> findDistinctByCategoriesInAndSizesIn(List<Long> categories, List<Long> sizes, Pageable pageable);
+            "WHERE pc.category_id IN ?1 AND ps.size_size_id IN ?2 " +
+            "GROUP BY p.product_id " +
+            "HAVING COUNT(DISTINCT pc.category_id) = ?3", nativeQuery = true)
+    Page<Product> findDistinctByCategoriesInAndSizesIn(List<Long> categories, List<Long> sizes, Integer categoriesQuantity, Pageable pageable);
     Page<Product> findAllByFavoritedBy(User user, Pageable pageable);
 
 }

@@ -7,7 +7,6 @@ import java.util.Optional;
 import com.fatec.interfriends.config.security.TokenProvider;
 import com.fatec.interfriends.domain.dto.login.LoginRequestDto;
 import com.fatec.interfriends.domain.dto.user.UserRequestDto;
-//import com.fatec.interfriends.domain.enums.RoleName;
 import com.fatec.interfriends.domain.model.Role;
 import com.fatec.interfriends.repository.RoleRepository;
 import org.springframework.http.HttpStatus;
@@ -87,13 +86,19 @@ public class UserServiceImpl implements UserService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
 		}
 
-		User user = optionalUser.get(); 
+		if (userRequestDto.getEmail() == null || userRequestDto.getName() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Os campos nome e email são obrigatórios");
+		}
+
+		User user = optionalUser.get();
 		user.setName(userRequestDto.getName());
 		user.setEmail(userRequestDto.getEmail());
-		if(userRequestDto.getPassword() == null) {
-			user.setPassword(user.getPassword());
+		if (userRequestDto.getPassword() != null) {
+			user.setPassword(userRequestDto.getPassword());
+			encryptPassword(user);
 		}
 		user.setBirthdate(userRequestDto.getBirthdate());
+
 		return userRepository.save(user);
 	}
 
@@ -142,8 +147,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findByCpf(String cpf) {
-		User user = this.userRepository.findByCpf(cpf).get();
-		return user;
+		Optional<User> optionalUser = userRepository.findByCpf(cpf);
+
+		if (optionalUser.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado.");
+		}
+
+		return optionalUser.get();
 	}
-	
+
 }

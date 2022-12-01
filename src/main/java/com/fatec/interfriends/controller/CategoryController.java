@@ -36,6 +36,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponseDto(this.categoryService.getCategory(categoryId)));
     }
     
+    @RolesAllowed("ROLE_ADMIN")
     @GetMapping()
     public ResponseEntity<List<CategoryResponseDto>> getCategories() {
         return ResponseEntity.status(HttpStatus.OK)

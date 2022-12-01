@@ -118,12 +118,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void createCharges(Order order, OrderRequestDto orderRequestDto) {
-        // TODO: ADICIONAR ROTA PARA NOTIFICAÇÃO
-        // String notificationUrls = "https://google.com";
 
         String referenceId = UUID.randomUUID().toString();
-        Integer length = String.valueOf(order.getTotalPrice()).split(Pattern.quote("."))[1].length();
-        Integer intTotalPrice = Integer.parseInt(String.valueOf(order.getTotalPrice()).replace(".", ""));
+
+        int length = String.valueOf(order.getTotalPrice()).split(Pattern.quote("."))[1].length();
+        int intTotalPrice = Integer.parseInt(String.valueOf(order.getTotalPrice()).replace(".", ""));
         intTotalPrice = length == 1 ? intTotalPrice * 10 : intTotalPrice;
         Amount amount = new Amount(intTotalPrice);
 

@@ -74,13 +74,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {  	
+    public Page<Product> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria) {
         return this.productCriteriaRepository.findAllWithFilters(productPage, productSearchCriteria);
     }
 
     @Override
     public Page<Product> searchProducts(Pageable pageable, List<Long> categoriesId, List<Long> sizesId) {
-        return this.productRepository.findDistinctByCategoriesInAndSizesIn(categoriesId, sizesId, pageable);
+        return this.productRepository.findDistinctByCategoriesInAndSizesIn(categoriesId, sizesId, categoriesId.size(), pageable);
     }
 
     @Override
@@ -99,9 +99,8 @@ public class ProductServiceImpl implements ProductService {
         addCategories(requestProduct, productRequestDto.getCategories());
         requestProduct = this.productRepository.save(requestProduct);
 
-        List<ProductSize> persistentProductSizes = this.productSizeService.getProductSizesByProduct(persistentProduct);
-        List<SizeQuantity> sizesQuantity = productRequestDto.getSizeQuantity().stream().map(productSize -> new SizeQuantity(this.sizeService.getSize(productSize.getSizeId()), productSize.getQuantity())).toList();		
-        			
+        List<SizeQuantity> sizesQuantity = productRequestDto.getSizeQuantity().stream().map(productSize -> new SizeQuantity(this.sizeService.getSize(productSize.getSizeId()), productSize.getQuantity())).toList();
+
         List<ProductSize> productSizes =  this.productSizeService.updateSizesOfProduct(sizesQuantity, requestProduct);
         requestProduct.setProductSizes(productSizes);
 
@@ -176,6 +175,6 @@ public class ProductServiceImpl implements ProductService {
         categoriesId.forEach(categoryId -> categories.add(this.categoryService.getCategory(categoryId)));
         product.setCategories(categories);
     }
-    
+
 
 }

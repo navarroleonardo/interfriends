@@ -27,17 +27,15 @@ public class ProductSizeServiceImpl implements ProductSizeService {
         this.productSizeRepository = productSizeRepository;
         this.sizeService = sizeService;
     }
-    
-    
-    
+
+
+
 	public List<ProductSize> bindSizesToProduct(Product product,  List<ProductSizeRequestDto> productSizes) {
 		List<SizeQuantity> sizesQuantity =  productSizes.stream()
 					.map(productSize -> new SizeQuantity(this.sizeService.getSize(productSize.getSizeId()),  productSize.getQuantity()))
 					.toList();
-		System.out.println(sizesQuantity.get(0).getSize());
-		System.out.println(sizesQuantity.get(0).getQuantity());
 		return sizesQuantity.stream()
-				.map(size -> 
+				.map(size ->
 					this.productSizeRepository.save(new ProductSize(product, size.getSize(), size.getQuantity()))
 				)
 				.toList();
@@ -58,7 +56,7 @@ public class ProductSizeServiceImpl implements ProductSizeService {
 	public void deleteByProduct(Product product) {
 		this.productSizeRepository.deleteByProduct(product);
 	}
-	
+
 	public List<ProductSize> updateSizesOfProduct(List<Size> persistentProductSizes, List<Size> requestSizes, Product product) {
 		requestSizes.stream()
 				.filter(size -> !persistentProductSizes.contains(size))
