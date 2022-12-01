@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Os campos nome e email são obrigatórios");
 		}
 
-		User user = optionalUser.get(); 
+		User user = optionalUser.get();
 		user.setName(userRequestDto.getName());
 		user.setEmail(userRequestDto.getEmail());
 		if (userRequestDto.getPassword() != null) {
@@ -155,5 +155,5 @@ public class UserServiceImpl implements UserService {
 
 		return optionalUser.get();
 	}
-	
+
 }

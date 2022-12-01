@@ -12,6 +12,7 @@ public class AddressResponseDto {
     private String publicLocal;
     private Integer number;
     private String complement;
+    private String cep;
 
     public AddressResponseDto(Address address) {
         BeanUtils.copyProperties(address, this);

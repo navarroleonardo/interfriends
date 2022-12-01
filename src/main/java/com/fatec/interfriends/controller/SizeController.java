@@ -36,7 +36,6 @@ public class SizeController {
         return ResponseEntity.status(HttpStatus.OK).body(new SizeResponseDto(this.sizeService.getSize(id)));
     }
     
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping()
     public ResponseEntity<List<SizeResponseDto>> getSizes() {
         return ResponseEntity.status(HttpStatus.OK).body(SizeResponseDto.SizesResponseDto(this.sizeService.getAllSizes()));

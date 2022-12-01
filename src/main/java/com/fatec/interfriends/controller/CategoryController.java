@@ -43,10 +43,10 @@ public class CategoryController {
         	   .body(CategoryResponseDto.CategoriesResponseDto(this.categoryService.getAllCategories()));
     }
 
-    @PreAuthorize("ROLE_ADMIN")
-    @PutMapping("/{categoryId}")
-    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable(value = "categoryId") Long categoryId, @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponseDto(this.categoryService.updateCategory(categoryId, categoryRequestDto)));
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable(value = "id") Long id, @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponseDto(this.categoryService.updateCategory(id, categoryRequestDto)));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
