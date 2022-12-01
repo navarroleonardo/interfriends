@@ -14,5 +14,7 @@ public class AddressRequestDto {
     @NotNull
     private Integer number;
     private String complement;
+    @NotNull
+    private String cep;
 
 }

@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 @Entity
@@ -25,6 +28,7 @@ public class OrderProduct implements Serializable {
 
     @ManyToOne
     @MapsId("productId")
+    @JsonIgnore
     private Product product;
 
     @ManyToOne

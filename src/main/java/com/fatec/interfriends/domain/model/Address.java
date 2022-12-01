@@ -30,6 +30,8 @@ public class Address implements Serializable {
     private Integer number;
     @Column(nullable = true)
     private String complement;
+    @Column(nullable = false)
+    private String cep;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

@@ -36,17 +36,16 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponseDto(this.categoryService.getCategory(categoryId)));
     }
     
-    @RolesAllowed("ROLE_ADMIN")
     @GetMapping()
     public ResponseEntity<List<CategoryResponseDto>> getCategories() {
         return ResponseEntity.status(HttpStatus.OK)
         	   .body(CategoryResponseDto.CategoriesResponseDto(this.categoryService.getAllCategories()));
     }
 
-    @PreAuthorize("ROLE_ADMIN")
-    @PutMapping("/{categoryId}")
-    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable(value = "categoryId") Long categoryId, @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponseDto(this.categoryService.updateCategory(categoryId, categoryRequestDto)));
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable(value = "id") Long id, @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponseDto(this.categoryService.updateCategory(id, categoryRequestDto)));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

@@ -219,4 +219,9 @@ public class OrderServiceImpl implements OrderService {
         if (coupon == null) return;
         this.couponService.invalidateCoupon(coupon);
     }
+
+	@Override
+	public List<Order> getOrders(Long userId) {
+		return this.orderRepository.findByUser(this.userService.getUser(userId));
+	}
 }

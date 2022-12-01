@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -35,5 +37,14 @@ public class OrderController {
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable(value = "orderId") Long orderId) {
         return ResponseEntity.status(HttpStatus.OK).body(new OrderResponseDto(this.orderService.getOrder(orderId)));
     }
+    
+    @RolesAllowed("ROLE_USER")
+    @GetMapping("/user/{orderId}")
+    @Transactional
+    public ResponseEntity<List<OrderResponseDto>> getOrders(@PathVariable(value = "orderId") Long userId) {	
+        return ResponseEntity.status(HttpStatus.OK).body(new OrderResponseDto().parseOrders(this.orderService.getOrders(userId)));
+    }
+    
+    
 
 }

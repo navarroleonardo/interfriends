@@ -1,6 +1,11 @@
 package com.fatec.interfriends.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.annotation.JsonMerge;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fatec.interfriends.domain.dto.product.ProductRequestDto;
 
 import lombok.AllArgsConstructor;
@@ -35,9 +40,11 @@ public class Product implements Serializable {
     
 
     @OneToMany
+    @JsonIgnore	
     private List<ProductSize> productSizes = new ArrayList<>();
     
     @OneToMany
+    @JsonIgnore
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)

@@ -11,6 +11,7 @@ public class BasicProductResponseDto {
     private String name;
     private Double price;
     private String description;
+    private byte[] image;
 
     public BasicProductResponseDto(Product product) {
         BeanUtils.copyProperties(product, this);
