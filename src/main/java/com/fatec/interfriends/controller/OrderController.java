@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -22,13 +23,13 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @RolesAllowed("ROLE_USER")
     @PostMapping
     public ResponseEntity<OrderResponseDto> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(new OrderResponseDto(this.orderService.createOrder(orderRequestDto)));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @RolesAllowed("ROLE_USER")
     @GetMapping("/{orderId}")
     @Transactional
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable(value = "orderId") Long orderId) {

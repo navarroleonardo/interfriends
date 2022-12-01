@@ -30,13 +30,13 @@ public class Product implements Serializable {
     private Double price;
     @Column(nullable = true)
     private String description;
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "LONGBLOB")
     private byte[] image;
     
 
     @OneToMany
     private List<ProductSize> productSizes = new ArrayList<>();
-
+    
     @OneToMany
     private List<OrderProduct> orderProducts = new ArrayList<>();
 

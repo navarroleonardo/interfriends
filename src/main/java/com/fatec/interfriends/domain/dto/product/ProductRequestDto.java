@@ -1,10 +1,12 @@
 package com.fatec.interfriends.domain.dto.product;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class ProductRequestDto {
 
     @NotNull
@@ -12,8 +14,7 @@ public class ProductRequestDto {
     @NotNull
     private Double price;
     private String description;
-    private Long size;
     private List<Long> categories;
     private byte[] image;
-    private Long quantity;
+    private List<ProductSizeRequestDto> sizeQuantity;
 }

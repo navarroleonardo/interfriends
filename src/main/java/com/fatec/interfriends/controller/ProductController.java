@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -61,11 +62,13 @@ public class ProductController {
     public ResponseEntity<ProductResponseDto> getProduct(@PathVariable(value = "id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProduct(id));
     }
-
+    
+    
     @GetMapping
     public ResponseEntity<Page<Product>> getProducts(ProductPage productPage, ProductSearchCriteria productSearchCriteria){
     	return ResponseEntity.status(HttpStatus.OK).body(this.productService.getProducts(productPage, productSearchCriteria));
     }
+    
     @GetMapping("/search")
     public ResponseEntity<Page<Product>> searchProducts(
             Pageable pageable,
@@ -89,7 +92,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(this.productService.deleteProduct(id));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @RolesAllowed("ROLE_USER")
     @PostMapping("/favorite")
     @Transactional
     public ResponseEntity<FavoriteResponseDto> favoriteProduct(@Valid @RequestBody FavoriteRequestDto favoriteRequestDto) {
@@ -103,11 +106,14 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.productService.getFavoriteProducts(userId, pageable));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @RolesAllowed("ROLE_USER")
     @DeleteMapping("/favorite")
     @Transactional
     public ResponseEntity<FavoriteResponseDto> disfavorProduct(@Valid @RequestBody FavoriteRequestDto favoriteRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.productService.disfavorProduct(favoriteRequestDto));
+    	System.out.println(favoriteRequestDto.getProductId());
+    	System.out.println(favoriteRequestDto.getUserId());
+    	return ResponseEntity.status(HttpStatus.OK).body(this.productService.disfavorProduct(favoriteRequestDto));
+
     }
 
 }

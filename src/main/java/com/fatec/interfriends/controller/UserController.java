@@ -46,13 +46,13 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(this.userService.getUser(id)));
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@PutMapping("/{id}")
 	public ResponseEntity<UserResponseDto> alterUser(@PathVariable(value = "id") Long id, @RequestBody @Valid UserRequestDto userRequestDto) {
 		return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(this.userService.updateUser(id, userRequestDto)));
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<UserResponseDto> deleteUser(@PathVariable(value = "id") Long id) {
 		return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(this.userService.deleteUser(id)));

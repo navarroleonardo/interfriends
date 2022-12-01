@@ -34,7 +34,7 @@ public class CouponServiceImpl implements CouponService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantidade de produtos inválida.");
         }
 
-        User user = this.userService.getUser(couponRequestDto.getUserId());
+        User user = this.userService.findByCpf(couponRequestDto.getCpf());
 
         SimpleDateFormat formatador = new SimpleDateFormat("dd-MM-yyyy");
         String expirationDate = formatador.format(new Date(new Date().getTime() + (1000L * 60 * 60 * 24 * 30)));

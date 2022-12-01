@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 @RestController
@@ -29,7 +30,7 @@ public class SizeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new SizeResponseDto(this.sizeService.createSize(sizeRequestDto)));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RolesAllowed("ROLE_ADMIN")
     @GetMapping("/{id}")
     public ResponseEntity<SizeResponseDto> getSize(@PathVariable(value = "id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(new SizeResponseDto(this.sizeService.getSize(id)));
